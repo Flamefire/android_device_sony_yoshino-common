@@ -130,7 +130,7 @@ PRODUCT_PACKAGES += \
 
 # POWER
 PRODUCT_PACKAGES += \
-    android.hardware.power-service-qti
+    android.hardware.power@1.2-service-qti
 
 # RADIO
 PRODUCT_PACKAGES += \
