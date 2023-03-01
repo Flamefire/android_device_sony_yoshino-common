@@ -156,6 +156,10 @@ else
         android.hardware.light@2.0-service.yoshino
 endif
 
+# LINEAGE HEALTH
+PRODUCT_PACKAGES += \
+    vendor.lineage.health-service.default
+
 # MEMTRACK
 PRODUCT_PACKAGES += \
     android.hardware.memtrack@1.0-impl \
