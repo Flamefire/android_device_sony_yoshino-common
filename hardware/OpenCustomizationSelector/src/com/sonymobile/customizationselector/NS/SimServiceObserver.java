@@ -15,7 +15,7 @@ public class SimServiceObserver {
         void onConnected();
     }
 
-    private final Context context;
+    private final Context mContext;
 
     private boolean registered = false;
     private int subID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
@@ -27,7 +27,7 @@ public class SimServiceObserver {
             try {
                 synchronized (new Object()) {
                     if (subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        TelephonyManager tm = context.getSystemService(TelephonyManager.class).createForSubscriptionId(subID);
+                        TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(subID);
                         if (tm.getSignalStrength() != null && tm.getSignalStrength().getLevel() != CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
                             listener.onConnected();
                             unregister();
@@ -47,14 +47,14 @@ public class SimServiceObserver {
     private Listener listener;
 
     public SimServiceObserver(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     public void register(int subID, Listener listener) {
         if (!registered) {
             this.subID = subID;
             this.listener = listener;
-            handler = new Handler(context.getMainLooper());
+            handler = new Handler(mContext.getMainLooper());
 
             handler.post(runnable);
             registered = true;

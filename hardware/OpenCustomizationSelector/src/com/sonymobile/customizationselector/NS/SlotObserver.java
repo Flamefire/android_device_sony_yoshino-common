@@ -14,7 +14,7 @@ public class SlotObserver {
         void onConnected();
     }
 
-    private final Context context;
+    private final Context mContext;
 
     private boolean registered = false;
     private int subID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
@@ -26,7 +26,7 @@ public class SlotObserver {
             try {
                 synchronized (new Object()) {
                     if (subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        if (CommonUtil.isSIMLoaded(context, subID)) {
+                        if (CommonUtil.isSIMLoaded(mContext, subID)) {
                             listener.onConnected();
                             unregister();
                         }
@@ -48,7 +48,7 @@ public class SlotObserver {
         if (!registered) {
             this.subID = subID;
             this.listener = listener;
-            handler = new Handler(context.getMainLooper());
+            handler = new Handler(mContext.getMainLooper());
 
             handler.post(runnable);
             registered = true;
@@ -70,6 +70,6 @@ public class SlotObserver {
     }
 
     public SlotObserver(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 }
