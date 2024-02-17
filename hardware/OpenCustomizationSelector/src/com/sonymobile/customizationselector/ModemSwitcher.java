@@ -255,7 +255,7 @@ public class ModemSwitcher {
     }
 
     public static void reApplyModem(Context ctx) {
-        if (Settings.System.getInt(ctx.getContentResolver(), "cs_re_apply_modem", 0) == 0) {
+        if (Settings.System.getInt(ctx.getContentResolver(), "cs_re_apply_modem", 1) == 0) {
             CSLog.d(TAG, "reApplyModem: Preference false. Returning ...");
             return;
         }
