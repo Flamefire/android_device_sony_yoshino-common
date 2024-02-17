@@ -15,7 +15,7 @@ public class SubIdObserver {
         void onConnected(int subID);
     }
 
-    private final Context context;
+    private final Context mContext;
 
     private boolean registered = false;
 
@@ -46,7 +46,7 @@ public class SubIdObserver {
     public void register(Listener listener) {
         if (!registered) {
             this.listener = listener;
-            handler = new Handler(context.getMainLooper());
+            handler = new Handler(mContext.getMainLooper());
 
             handler.post(runnable);
             registered = true;
@@ -57,8 +57,8 @@ public class SubIdObserver {
 
     private int getSubID() {
         int[] subs = null;
-        if (CommonUtil.isDualSim(context)) {
-            subs = SubscriptionManager.getSubId(Settings.System.getInt(context.getContentResolver(), "ns_slot", 0));
+        if (CommonUtil.isDualSim(mContext)) {
+            subs = SubscriptionManager.getSubId(Settings.System.getInt(mContext.getContentResolver(), "ns_slot", 0));
         } else {
             subs = SubscriptionManager.getSubId(0);
         }
@@ -75,6 +75,6 @@ public class SubIdObserver {
     }
 
     public SubIdObserver(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 }

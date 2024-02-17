@@ -13,10 +13,10 @@ public class ImsSwitcher {
 
     private static final String TAG = "IMS_Switcher";
 
-    private final Context context;
+    private final Context mContext;
 
     public ImsSwitcher(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     public void switchOnIMS(int subID) {
@@ -25,11 +25,11 @@ public class ImsSwitcher {
         context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
                 .edit().putString(Configurator.OLD_CONFIG_KEY, "null").apply();
 
-        if (CommonUtil.isDefaultDataSlot(context, subID)) {
+        if (CommonUtil.isDefaultDataSlot(mContext, subID)) {
             CSLog.d(TAG, "Default data SIM loaded");
-            Intent service = new Intent(context, CustomizationSelectorService.class);
+            Intent service = new Intent(mContext, CustomizationSelectorService.class);
             service.setAction("evaluate_action");
-            context.startService(service);
+            mContext.startService(service);
         }
     }
 
@@ -38,7 +38,7 @@ public class ImsSwitcher {
         try {
             String currentModem = ModemSwitcher.getCurrentModemConfig().replace(ModemSwitcher.MODEM_FS_PATH, "");
             if (CommonUtil.isModemDefault(currentModem)) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage("Your modem is already default, no reboot required");
                 builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
                 AlertDialog dialog = builder.create();
@@ -80,12 +80,12 @@ public class ImsSwitcher {
         CSLog.d(TAG, "Turning to default to: " + modem);
 
         if (new ModemSwitcher().setModemConfiguration(ModemSwitcher.MODEM_FS_PATH + modem)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setCancelable(false);
             builder.setMessage("Your device has now switched to default modem " + modem + "\nReboot required.");
             builder.setPositiveButton("Reboot", (dialogInterface, i) -> {
                 dialogInterface.dismiss();
-                context.getSystemService(PowerManager.class).reboot(context.getString(R.string.reboot_reason_modem_debug));
+                mContext.getSystemService(PowerManager.class).reboot(mContext.getString(R.string.reboot_reason_modem_debug));
             });
             AlertDialog dialog = builder.create();
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
