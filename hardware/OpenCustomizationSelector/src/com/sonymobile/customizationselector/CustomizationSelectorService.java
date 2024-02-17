@@ -37,14 +37,14 @@ public class CustomizationSelectorService extends IntentService {
                             PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
 
                     if (isUserSetupComplete(context)) {
-                        CSLog.d(TAG, "isNewConfigurationNeeded - Need to reboot, starting dialog.");
+                        CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, starting dialog.");
                         context.startActivity(new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_HOME).addFlags(270565376));
                     } else {
-                        CSLog.d(TAG, "isNewConfigurationNeeded - Need to reboot, user setup not complete");
+                        CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, user setup not complete");
                     }
                 } else {
                     configurator.saveConfigurationKey();
-                    CSLog.d(TAG, "isNewConfigurationNeeded - No new configuration.");
+                    CSLog.d(TAG, "evaluateCarrierBundle - No new configuration.");
 
                     ModemSwitcher.reApplyModem(configurator.getTargetContext());
                 }
