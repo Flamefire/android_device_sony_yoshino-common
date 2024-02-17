@@ -1,6 +1,7 @@
 package com.sonymobile.customizationselector;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.PersistableBundle;
 import android.os.SystemProperties;
 import android.provider.Settings;
@@ -42,15 +43,28 @@ public class Configurator {
         this.mBundle = persistableBundle;
     }
 
+    public static void clearMiscTaConfigId() {
+        CSLog.d(TAG, "Clear MiscTa value for Config Id");
+        MiscTA.write(TA_AC_VERSION, "".getBytes(StandardCharsets.UTF_8));
+    }
+
     private boolean anythingChangedSinceLastEvaluation() {
-        String configKey = getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE).getString(OLD_CONFIG_KEY, "");
+        String configKey = getPreferences().getString(OLD_CONFIG_KEY, "");
         CSLog.d(TAG, "OldConfigKey: " + configKey);
         return !configKey.equals(createCurrentConfigurationKey());
     }
 
-    public static void clearMiscTaConfigId() {
-        CSLog.d(TAG, "Clear MiscTa value for Config Id");
-        MiscTA.write(TA_AC_VERSION, "".getBytes(StandardCharsets.UTF_8));
+    public void saveConfigurationKey() {
+        String createCurrentConfigurationKey = createCurrentConfigurationKey();
+        getPreferences().edit()
+                .putString(OLD_CONFIG_KEY, createCurrentConfigurationKey)
+                .apply();
+
+        CSLog.d(TAG, "saveConfigKey - key saved: " + createCurrentConfigurationKey);
+    }
+
+    public void clearConfigurationKey() {
+        getPreferences().edit().putString(OLD_CONFIG_KEY, "null").apply();
     }
 
     private String createCurrentConfigurationKey() {
@@ -68,7 +82,7 @@ public class Configurator {
 
     private String evaluateModem(String modem) {
         CSLog.d(TAG, "modem = " + modem);
-        return new ModemConfiguration(getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE)).getModemConfigurationNeeded(modem);
+        return new ModemConfiguration(getPreferences()).getModemConfigurationNeeded(modem);
     }
 
     private String getIccid() {
@@ -86,6 +100,10 @@ public class Configurator {
         }
         CSLog.d(TAG, "Direct Boot is disabled. Use credential encrypted storage.");
         return mContext;
+    }
+
+    public SharedPreferences getPreferences() {
+        return getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE);
     }
 
     public boolean isNewConfigurationNeeded() {
@@ -109,15 +127,6 @@ public class Configurator {
         }
     }
 
-    public void saveConfigurationKey() {
-        String createCurrentConfigurationKey = createCurrentConfigurationKey();
-        getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE).edit()
-                .putString(OLD_CONFIG_KEY, createCurrentConfigurationKey)
-                .apply();
-
-        CSLog.d(TAG, "saveConfigKey - key saved: " + createCurrentConfigurationKey);
-    }
-
     public void set() {
         CSLog.d(TAG, String.format("Set() - modem = '%s' - carrier config id = '%s'", mModem, mConfigId));
         if (anythingChangedSinceLastEvaluation()) {
@@ -126,8 +135,7 @@ public class Configurator {
                 MiscTA.write(TA_AC_VERSION, mConfigId.getBytes(StandardCharsets.UTF_8));
             }
             if (!TextUtils.isEmpty(mModem)) {
-                new ModemConfiguration(getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE))
-                        .setConfiguration(mModem);
+                new ModemConfiguration(getPreferences()).setConfiguration(mModem);
             }
         }
     }
