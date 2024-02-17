@@ -44,7 +44,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
             }
         }
         if (pref == 1) {
-            int apply = intent.getIntExtra("cs_re_apply_modem", DISABLED);
+            int apply = intent.getIntExtra("cs_re_apply_modem", ENABLED);
             if (apply == ENABLED) ModemSwitcher.reApplyModem(context);
             if (apply == DISABLED) ModemSwitcher.revertReApplyModem(context);
             (context.getSystemService(PowerManager.class)).reboot(context.getString(R.string.reboot_reason));

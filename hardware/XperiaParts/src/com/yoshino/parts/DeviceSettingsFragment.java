@@ -196,9 +196,9 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
 
         SwitchPreference modemPref = findPreference(CS_RE_APPLY_MODEM);
         assert modemPref != null;
-        modemPref.setChecked(Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 0) == 1);
+        modemPref.setChecked(Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 1) == 1);
         modemPref.setOnPreferenceClickListener(preference -> {
-            int applyModem = Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 0);
+            int applyModem = Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 1);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(modemPref.getContext());
             builder.setCancelable(false);
@@ -273,7 +273,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
         broadcast.putExtra("pref", pref);
         if (pref == 0) broadcast.putExtra(CS_IMS, Settings.System.getInt(context.getContentResolver(), CS_IMS, 1));
         if (pref == 1)
-            broadcast.putExtra(CS_RE_APPLY_MODEM, Settings.System.getInt(context.getContentResolver(), CS_RE_APPLY_MODEM, 0));
+            broadcast.putExtra(CS_RE_APPLY_MODEM, Settings.System.getInt(context.getContentResolver(), CS_RE_APPLY_MODEM, 1));
         broadcast.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES).setComponent(new ComponentName("com.sonymobile.customizationselector",
                 "com.sonymobile.customizationselector.PreferenceReceiver"));
         context.sendBroadcast(broadcast);
