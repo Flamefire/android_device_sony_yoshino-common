@@ -75,6 +75,9 @@ public class ModemConfParser {
                 CSLog.e(TAG, "IOException: while closing reader", e);
             }
         }
+        if (modemVariant == "" || modemVariant == null) {
+            modemVariant = "ir51_ir92_ims";
+        }
         CSLog.d(TAG, "Parsed modem: '" + modemVariant + "'");
         return modemVariant;
     }
