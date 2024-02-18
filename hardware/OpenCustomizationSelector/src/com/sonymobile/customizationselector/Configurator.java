@@ -119,8 +119,13 @@ public class Configurator {
                 CSLog.d(TAG, "isNewConfigurationNeeded - Modem: " + mModem);
                 CSLog.d(TAG, "isNewConfigurationNeeded - Carrier Config Id: " + mConfigId);
             }
-            // Actual: (this.mConfigId == null && TextUtils.isEmpty(this.mModem)) ? false : true
-            return mConfigId != null || !TextUtils.isEmpty(mModem);
+            try {
+                return (mConfigId != null || !TextUtils.isEmpty(mModem)) && !ModemSwitcher.getCurrentModemConfig().equals(mModem);
+            } catch (IOException e) {
+                CSLog.w(TAG, "Unable to read out current configuration");
+            	// Actual: (this.mConfigId == null && TextUtils.isEmpty(this.mModem)) ? false : true
+				return mConfigId != null || !TextUtils.isEmpty(mModem);
+            }
         } else {
             CSLog.d(TAG, "isNewConfigurationNeeded - ConfigKey not updated, no need to evaluate");
             return false;
