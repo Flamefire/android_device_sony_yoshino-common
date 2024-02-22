@@ -33,16 +33,6 @@ public class EventReceiver extends BroadcastReceiver {
             return;
         }
 
-        String buildFlavor = SystemProperties.get("ro.build.flavor", "--");
-        if (buildFlavor.contains("maple")) {
-            CSLog.d(TAG, "DEVICE IS MAPLE !");
-            if (!MapleStarter.mStarted) {
-                MapleStarter.mStarted = true;
-                context.startService(new Intent(context, MapleStarter.class));
-            }
-            return;
-        }
-
         int subID = getSubId(context, intent);
         if (subID != -1) {
             CSLog.d(TAG, "Saving sub ID for later");
