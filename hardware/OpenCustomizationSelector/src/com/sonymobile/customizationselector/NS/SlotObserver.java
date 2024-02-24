@@ -15,57 +15,51 @@ public class SlotObserver {
     }
 
     private final Context mContext;
-    private boolean mRegistered = false;
-    private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
     private Handler mHandler;
     private Listener mListener;
+    private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
 
     private final Runnable runnable = new Runnable() {
         @Override
         public synchronized void run() {
             try {
-                if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                    if (CommonUtil.isSIMLoaded(mContext, mSubID)) {
-                        mListener.onConnected();
-                        unregister();
-                    }
-                } else {
+                if (mSubID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
+                    unregister();
+                else if (CommonUtil.isSIMLoaded(mContext, mSubID)) {
+                    mListener.onConnected();
                     unregister();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                mHandler.postDelayed(this, 2000);
+                if(mListener != null)
+                    mHandler.postDelayed(this, 2000);
             }
         }
     };
 
     public void register(int subID, Listener listener) {
-        if (!mRegistered) {
-            mSubID = subID;
-            mListener = listener;
+        if (mListener != null)
+            return;
+        mSubID = subID;
+        mListener = listener;
+
+        if(mHandler == null)
             mHandler = new Handler(mContext.getMainLooper());
-
-            mHandler.post(runnable);
-            mRegistered = true;
-
-            CSLog.d(TAG, "Registered");
-        }
+        mHandler.post(runnable);
+        CSLog.d(TAG, "Registered");
     }
 
     public void unregister() {
-        if (mRegistered) {
-            mListener = null;
-            mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
-
-            mHandler.removeCallbacks(runnable);
-
-            mRegistered = false;
-            CSLog.d(TAG, "Unregistered");
-        }
+        if (mListener == null)
+            return;
+        mHandler.removeCallbacks(runnable);
+        mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
+        mListener = null;
+        CSLog.d(TAG, "Unregistered");
     }
 
     public SlotObserver(Context context) {
-        mContext = context;
+        this.mContext = context;
     }
 }
