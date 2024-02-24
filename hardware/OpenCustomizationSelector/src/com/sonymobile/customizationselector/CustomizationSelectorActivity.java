@@ -19,7 +19,7 @@ import static android.view.WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG;
 
 public class CustomizationSelectorActivity extends Activity implements OnClickListener {
 
-    private static final String TAG = CustomizationSelectorActivity.class.getSimpleName();
+    private static final String TAG = "CustomizationSelectorActivity";
 
     private AlertDialog mAlertDialog;
     private Configurator mConfigurator;

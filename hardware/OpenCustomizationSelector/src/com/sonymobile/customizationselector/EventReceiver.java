@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 
 public class EventReceiver extends BroadcastReceiver {
-    private static final String TAG = EventReceiver.class.getSimpleName();
+    private static final String TAG = "EventReceiver";
 
     public static final String CS_IMS = "cs_ims";
 

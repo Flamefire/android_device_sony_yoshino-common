@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class ModemConfiguration {
 
-    private static final String TAG = ModemConfiguration.class.getSimpleName();
+    private static final String TAG = "ModemConfiguration";
 
     private static final String MODEM_APPENDIX = "_tar.mbn";
     public static final String SAVED_MODEM_CONFIG = "saved_config";

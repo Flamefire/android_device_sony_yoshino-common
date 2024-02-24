@@ -20,7 +20,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 
 public class CustomizationSelectorSUWActivity extends Activity {
 
-    private static final String TAG = CustomizationSelectorSUWActivity.class.getSimpleName();
+    private static final String TAG = "CustomizationSelectorSUWActivity";
 
     private static final long MAX_VIEW_TIME_MS = 120000;
     private static final int MSG_CONTINUE = 0;
