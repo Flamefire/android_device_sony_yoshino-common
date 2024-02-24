@@ -17,7 +17,6 @@ public class SimConfigId {
     private static final String TAG = "SimConfigId";
 
     private static final int MCC_LENGTH = 3;
-    private static final String SUBSCRIPTION = "subscription";
 
     private final Context mContext;
 
