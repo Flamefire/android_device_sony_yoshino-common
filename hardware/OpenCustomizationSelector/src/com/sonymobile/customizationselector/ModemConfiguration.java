@@ -9,7 +9,7 @@ public class ModemConfiguration {
 
     private static final String TAG = "ModemConfiguration";
 
-    private static final String MODEM_APPENDIX = "_tar.mbn";
+    public static final String MODEM_APPENDIX = "_tar.mbn";
     public static final String SAVED_MODEM_CONFIG = "saved_config";
 
     private final ModemSwitcher mModemSwitcher = new ModemSwitcher();
@@ -66,12 +66,12 @@ public class ModemConfiguration {
 
     public boolean setConfiguration(String config) {
         CSLog.d(TAG, "setConfiguration - modem configuration = " + config);
-        String string = mPreference.getString(SAVED_MODEM_CONFIG, "");
         if (TextUtils.isEmpty(config)) {
             return false;
         }
 
-        if (mModemSwitcher.isModemStatusSuccess() || !string.equals(config)) {
+        String savedConfig = mPreference.getString(SAVED_MODEM_CONFIG, "");
+        if (mModemSwitcher.isModemStatusSuccess() || !savedConfig.equals(config)) {
             mPreference.edit().putString(SAVED_MODEM_CONFIG, config).apply();
             CSLog.d(TAG, "Updating the modem configuration with " + config);
 

@@ -88,12 +88,8 @@ public class ServiceProvidersParser {
                         }
                     } catch (XmlPullParserException e) {
                         e.printStackTrace();
-                        CSLog.d(TAG, "Number of service providers found: " + arrayList.size());
-                        return arrayList;
                     } catch (IOException e) {
                         e.printStackTrace();
-                        CSLog.d(TAG, "Number of service providers found: " + arrayList.size());
-                        return arrayList;
                     }
                 }
                 CSLog.d(TAG, "Number of service providers found: " + arrayList.size());
@@ -102,10 +98,9 @@ public class ServiceProvidersParser {
         return arrayList;
     }
 
-    private static String fix(String str) {
-        if (str == null) {
-            str = "";
-        }
-        return str.replace("\n", "").replace("\t", "").trim();
+    private static String fix(String s) {
+        if (TextUtils.isEmpty(s))
+            return "";
+        return s.replace("\n", "").replace("\t", "").trim();
     }
 }

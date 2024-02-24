@@ -18,8 +18,8 @@ public class StatusActivity extends Activity {
         TextView reportText = findViewById(R.id.m_report_text);
         TextView statusText = findViewById(R.id.m_status_text);
 
-        File reportFile = new File("/cache/modem/modem_switcher_report");
-        File statusFile = new File("/cache/modem/modem_switcher_status");
+        File reportFile = new File(ModemSwitcher.MODEM_REPORT_FILE);
+        File statusFile = new File(ModemSwitcher.MODEM_STATUS_FILE);
 
         reportText.setText(reportFile.exists() ? readFile(reportFile) : getString(R.string.file_not_found));
         statusText.setText(statusFile.exists() ? readFile(statusFile) : getString(R.string.file_not_found));

@@ -26,14 +26,16 @@ public class CustomizationSelectorSUWActivity extends Activity {
     private static final int MSG_CONTINUE = 0;
     private static final int MSG_REBOOT = 1;
 
+    /** From com.android.internal.telephony.TelephonyIntents */
+    private static final String ACTION_SIM_STATE_CHANGED = "android.intent.action.SIM_STATE_CHANGED";
+
     private final BroadcastReceiver mSimReceiver = new BroadcastReceiver() {
         private static final String TAG = "CustomizationSelectorSUWActivity - SimReceiver";
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (context != null && intent != null && "android.intent.action.SIM_STATE_CHANGED".equals(intent.getAction())) {
-                int simState = mTelephonyManager.getSimState();
-                CSLog.d(TAG, "SimReceiver - sim state: " + simState);
+            if (context != null && intent != null && ACTION_SIM_STATE_CHANGED.equals(intent.getAction())) {
+                CSLog.d(TAG, "SimReceiver - sim state: " + mTelephonyManager.getSimState());
 
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
@@ -104,7 +106,7 @@ public class CustomizationSelectorSUWActivity extends Activity {
 
     private void startTimeout() {
         int simState = mTelephonyManager.getSimState();
-        if (simState != 2 && simState != 3) {
+        if (simState != TelephonyManager.SIM_STATE_PIN_REQUIRED && simState != TelephonyManager.SIM_STATE_PUK_REQUIRED) {
             CSLog.d(TAG, "Start timeout");
             StateHandler.getStateHandler(this).sendEmptyMessageDelayed(MSG_CONTINUE, MAX_VIEW_TIME_MS);
         }
@@ -142,16 +144,14 @@ public class CustomizationSelectorSUWActivity extends Activity {
     public boolean isSimWorking() {
         int simState = mTelephonyManager.getSimState();
         CSLog.d(TAG, "isSimWorking - sim state: " + simState);
-        if (simState != 1) {
-            switch (simState) {
-                case 7:
-                case 8:
-                    break;
-                default:
-                    return true;
-            }
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_ABSENT:
+            case TelephonyManager.SIM_STATE_PERM_DISABLED:
+            case TelephonyManager.SIM_STATE_CARD_IO_ERROR:
+                return false;
+            default:
+                return true;
         }
-        return false;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class CustomizationSelectorSUWActivity extends Activity {
             continueSetupWizard();
             return;
         }
-        registerReceiver(mSimReceiver, new IntentFilter("android.intent.action.SIM_STATE_CHANGED"));
+        registerReceiver(mSimReceiver, new IntentFilter(ACTION_SIM_STATE_CHANGED));
     }
 
     @Override

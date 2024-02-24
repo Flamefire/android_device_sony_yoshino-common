@@ -28,7 +28,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
             int change = intent.getIntExtra(EventReceiver.CS_IMS, DISABLED);
             CSLog.d(TAG, "change received: " + change);
             int subID = context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
-                    .getInt("event_subID", SubscriptionManager.INVALID_SUBSCRIPTION_ID);
+                    .getInt(EventReceiver.SUBID_KEY, SubscriptionManager.INVALID_SUBSCRIPTION_ID);
             if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
                 CSLog.e(TAG, "Invalid sub ID, returning");
                 return;
