@@ -86,9 +86,9 @@ public class Configurator {
     }
 
     private String getIccid() {
-        TelephonyManager telephonyManager = mContext.getSystemService(TelephonyManager.class);
+        TelephonyManager tm = mContext.getSystemService(TelephonyManager.class);
         int defaultSubId = CommonUtil.getDefaultSubId(mContext);
-        String simSerialNumber = (telephonyManager == null || defaultSubId == -1) ? "" : telephonyManager.getSimSerialNumber(defaultSubId);
+        String simSerialNumber = (tm == null || defaultSubId == -1) ? "" : tm.getSimSerialNumber(defaultSubId);
         CSLog.d(TAG, "getIccid: " + simSerialNumber);
         return simSerialNumber != null ? simSerialNumber : "";
     }
