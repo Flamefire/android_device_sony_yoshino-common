@@ -2,10 +2,10 @@ package com.sonymobile.customizationselector.NS;
 
 import android.content.Context;
 import android.os.Handler;
-import android.telephony.CellSignalStrength;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import com.sonymobile.customizationselector.CSLog;
+import com.sonymobile.customizationselector.CommonUtil;
 
 public class SimServiceObserver {
 
@@ -28,7 +28,7 @@ public class SimServiceObserver {
                 synchronized (new Object()) {
                     if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
                         TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
-                        if (tm.getSignalStrength() != null && tm.getSignalStrength().getLevel() != CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+                        if (CommonUtil.hasSignal(tm)) {
                             mListener.onConnected();
                             unregister();
                         }
