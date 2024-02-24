@@ -50,8 +50,8 @@ public class ModemSwitcherActivity extends Activity {
     private void verifyPick(final String str) {
         Builder builder = new Builder(this);
         builder.setTitle(R.string.debug_verify_title).setMessage(getResources().getString(R.string.debug_verify_text, str));
-        builder.setPositiveButton("OK", (dialogInterface, i) -> applyModem(str));
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.setPositiveButton(R.string.ok_button_label, (dialogInterface, i) -> applyModem(str));
+        builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> dialogInterface.dismiss());
         builder.create().show();
     }
 

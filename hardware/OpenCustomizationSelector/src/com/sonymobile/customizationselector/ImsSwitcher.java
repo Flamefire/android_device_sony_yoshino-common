@@ -39,7 +39,7 @@ public class ImsSwitcher {
             if (CommonUtil.isModemDefault(currentModem)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage("Your modem is already default, no reboot required");
-                builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
+                builder.setPositiveButton(R.string.ok_button_label, (dialogInterface, i) -> dialogInterface.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
                 if (!dialog.isShowing()) {

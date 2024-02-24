@@ -35,7 +35,7 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
             Builder builder = new Builder(this);
             builder.setCancelable(false);
             builder.setMessage(R.string.customization_restart_desc_txt);
-            builder.setPositiveButton("OK", this);
+            builder.setPositiveButton(R.string.ok_button_label, this);
             mAlertDialog = builder.create();
             mAlertDialog.setCanceledOnTouchOutside(false);
             mAlertDialog.setCancelable(false);
