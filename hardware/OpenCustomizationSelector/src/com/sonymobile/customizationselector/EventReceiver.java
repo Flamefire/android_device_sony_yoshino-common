@@ -18,7 +18,7 @@ import java.io.FileReader;
 
 public class EventReceiver extends BroadcastReceiver {
 
-    private static final String TAG = EventReceiver.class.getSimpleName();
+    private static final String TAG = "EventReceiver";
     private static final String CHANNEL_ID = "Sony Modem";
 
     private int getSubId(Context context, Intent intent) {

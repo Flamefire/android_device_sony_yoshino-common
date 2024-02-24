@@ -9,11 +9,12 @@ import com.sonymobile.customizationselector.CSLog;
 import com.sonymobile.customizationselector.CommonUtil;
 
 public class NSBootReceiver extends BroadcastReceiver {
+    private static final String TAG = "NSBootReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (context == null) {
-            CSLog.d("NSBootReceiver", "Error: Context was null");
+            CSLog.d(TAG, "Error: Context was null");
             return;
         }
         if (Settings.System.getInt(context.getContentResolver(), "ns_service", 0) == 1) {
@@ -21,7 +22,7 @@ public class NSBootReceiver extends BroadcastReceiver {
                 CSLog.d("NSBootReceiver", "Device is dual sim, but slot pref is invalid");
                 return;
             }
-            CSLog.d("NSBootReceiver", "Starting service ...");
+            CSLog.d(TAG, "Starting service ...");
             context.startServiceAsUser(new Intent(context, NetworkSwitcher.class), UserHandle.CURRENT);
         }
     }

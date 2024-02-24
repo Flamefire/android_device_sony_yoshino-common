@@ -13,7 +13,7 @@ import java.util.Comparator;
 
 public class ModemSwitcher {
 
-    private static final String TAG = ModemSwitcher.class.getSimpleName();
+    private static final String TAG = "ModemSwitcher";
 
     private static final int MODEM_COMMAND_UNIT = 2405;
     private static final int MODEM_MAGIC_COMMAND_LENGTH = 3;
