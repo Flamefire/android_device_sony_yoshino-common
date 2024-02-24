@@ -23,7 +23,7 @@ public class SubIdObserver {
         @Override
         public synchronized void run() {
             try {
-                int subId = getSubID();
+                int subId = CommonUtil.getSubID(mContext);
                 if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
                     mListener.onConnected(subId);
                     unregister();
@@ -45,19 +45,8 @@ public class SubIdObserver {
 
             mHandler.post(runnable);
             mRegistered = true;
-
             CSLog.d(TAG, "Registered");
         }
-    }
-
-    private int getSubID() {
-        int[] subs = null;
-        if (CommonUtil.isDualSim(mContext)) {
-            subs = SubscriptionManager.getSubId(Settings.System.getInt(mContext.getContentResolver(), "ns_slot", 0));
-        } else {
-            subs = SubscriptionManager.getSubId(0);
-        }
-        return subs == null ? SubscriptionManager.INVALID_SUBSCRIPTION_ID : subs[0];
     }
 
     private void unregister() {
