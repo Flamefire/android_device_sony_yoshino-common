@@ -3,6 +3,8 @@ package com.sonymobile.customizationselector;
 import android.content.Context;
 import android.os.PersistableBundle;
 import android.os.storage.StorageManager;
+import android.telephony.CellSignalStrength;
+import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -116,6 +118,11 @@ public class CommonUtil {
         }
         CSLog.d(TAG, "isSIMLoaded: false");
         return false;
+    }
+
+    public static boolean hasSignal(TelephonyManager tm) {
+        SignalStrength signal = tm.getSignalStrength();
+        return signal != null && signal.getLevel() != CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
     }
 
     public static String[] getDefaultModems() {
