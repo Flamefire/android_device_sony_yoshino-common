@@ -108,14 +108,15 @@ public class SimConfigId {
         return simConfigId;
     }
 
-    private boolean matchOnImsi(String str, String str2) {
-        return str2 != null && Pattern.compile(str).matcher(str2).matches();
+    private boolean matchOnImsi(String pattern, String s) {
+        return s != null && Pattern.compile(pattern).matcher(s).matches();
     }
 
-    private boolean matchOnSP(String str, String str2) {
-        return NULL_VALUE.equalsIgnoreCase(str) ?
-                TextUtils.isEmpty(str2) || NULL_VALUE.equalsIgnoreCase(str2) :
-                str2 != null && Pattern.compile(str).matcher(str2).matches();
+    private boolean matchOnSP(String pattern, String s) {
+        if (NULL_VALUE.equalsIgnoreCase(pattern))
+            return TextUtils.isEmpty(s) || NULL_VALUE.equalsIgnoreCase(s);
+        else
+            return s != null && Pattern.compile(pattern).matcher(s).matches();
     }
 
     public String getId() {

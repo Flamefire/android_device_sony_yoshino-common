@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.telephony.CellSignalStrength;
 import android.telephony.RadioAccessFamily;
@@ -70,7 +69,7 @@ public class NetworkSwitcher extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int i, int i1) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
 
@@ -112,7 +111,7 @@ public class NetworkSwitcher extends Service {
             setOriginalNetwork(subID, currentNetwork);
             changeNetwork(tm, subID, getLowerNetwork());
 
-            if (StorageManager.isFileEncryptedNativeOrEmulated() && unlockObserver != null) {
+            if (CommonUtil.isDirectBootEnabled() && unlockObserver != null) {
                 // Delay resetting the network until phone is unlocked.
                 // The current unlock observer is no longer required
                 unregisterReceiver(unlockObserver);

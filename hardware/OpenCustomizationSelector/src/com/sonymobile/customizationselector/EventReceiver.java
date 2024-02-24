@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.SystemProperties;
 import android.provider.Settings;
+import android.telephony.CarrierConfigManager;
 import android.telephony.SubscriptionManager;
 import androidx.core.app.NotificationCompat;
 
@@ -20,13 +21,19 @@ public class EventReceiver extends BroadcastReceiver {
     private static final String TAG = "EventReceiver";
 
     public static final String CS_IMS = "cs_ims";
+    public static final String CS_NOTIFICATION = "cs_notification";
+    public static final String SUBID_KEY = "event_subID";
 
     private static final String CHANNEL_ID = "Sony Modem";
+    private static final String SUBSCRIPTION_KEY = "subscription"; // PhoneConstants.SUBSCRIPTION_KEY (internal)
 
     private int getSubId(Context context, Intent intent) {
-        int intExtra = intent.getIntExtra("subscription", SubscriptionManager.INVALID_SUBSCRIPTION_ID);
-        CSLog.d(TAG, "Event received for subscription: " + intExtra);
-        return (intExtra == -1 || !CommonUtil.isMandatorySimParamsAvailable(context, intExtra)) ? -1 : intExtra;
+        int subId = intent.getIntExtra(SUBSCRIPTION_KEY, SubscriptionManager.INVALID_SUBSCRIPTION_ID);
+        CSLog.d(TAG, "Event received for subscription: " + subId);
+        if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID && CommonUtil.isMandatorySimParamsAvailable(context, subId))
+            return subId;
+        else
+            return SubscriptionManager.INVALID_SUBSCRIPTION_ID;
     }
 
     public void onReceive(Context context, Intent intent) {
@@ -36,10 +43,10 @@ public class EventReceiver extends BroadcastReceiver {
         }
 
         int subID = getSubId(context, intent);
-        if (subID != -1) {
+        if (subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
             CSLog.d(TAG, "Saving sub ID for later");
             context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
-                    .edit().putInt("event_subID", getSubId(context, intent)).apply();
+                    .edit().putInt(SUBID_KEY, subID).apply();
         }
 
         if (Settings.System.getInt(context.getContentResolver(), CS_IMS, 1) == 0) {
@@ -52,16 +59,16 @@ public class EventReceiver extends BroadcastReceiver {
         }
 
         String action = intent.getAction();
-        if ("android.telephony.action.CARRIER_CONFIG_CHANGED".equals(action)) {
+        if (CarrierConfigManager.ACTION_CARRIER_CONFIG_CHANGED.equals(action)) {
             CSLog.d(TAG, "Carrier config changed received");
 
             if (CommonUtil.isDefaultDataSlot(context, getSubId(context, intent))) {
                 CSLog.d(TAG, "Default data SIM loaded");
                 Intent service = new Intent(context, CustomizationSelectorService.class);
-                service.setAction("evaluate_action");
+                service.setAction(CustomizationSelectorService.EVALUATE_ACTION);
                 context.startService(service);
             }
-        } else if ("android.intent.action.BOOT_COMPLETED".equals(action)) {
+        } else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
             if (CommonUtil.isDualSim(context)) {
                 DSDataSubContentJob.scheduleJob(context);
             }
@@ -76,7 +83,7 @@ public class EventReceiver extends BroadcastReceiver {
         NotificationManager manager = context.getSystemService(NotificationManager.class);
         createChannel(manager);
 
-        if (Settings.System.getInt(context.getContentResolver(), "cs_notification", 1) == 1) {
+        if (Settings.System.getInt(context.getContentResolver(), CS_NOTIFICATION, 1) == 1) {
             manager.notify(1, new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setContentTitle(CHANNEL_ID)
                     .setContentText("Status: ...")
@@ -106,7 +113,7 @@ public class EventReceiver extends BroadcastReceiver {
     private String[] readModemFile() {
         String[] stat = {"N/A", "N/A"};
         try {
-            File file = new File("/cache/modem/modem_switcher_status");
+            File file = new File(ModemSwitcher.MODEM_STATUS_FILE);
             if (file.exists()) {
                 String line, data = "";
 

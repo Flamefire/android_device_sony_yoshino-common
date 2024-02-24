@@ -64,10 +64,9 @@ public class DynamicConfigParser {
         return hashMap;
     }
 
-    private static String fix(String str) {
-        if (str == null) {
-            str = "";
-        }
-        return str.replace("\n", "").replace("\t", "").trim();
+    private static String fix(String s) {
+        if (TextUtils.isEmpty(s))
+            return "";
+        return s.replace("\n", "").replace("\t", "").trim();
     }
 }

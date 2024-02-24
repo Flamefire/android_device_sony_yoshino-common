@@ -24,9 +24,9 @@ public class SubIdObserver {
         public void run() {
             try {
                 synchronized (new Object()) {
-                    int sub = getSubID();
-                    if (sub != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        listener.onConnected(sub);
+                    int subId = getSubID();
+                    if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                        listener.onConnected(subId);
                         unregister();
                     }
                 }

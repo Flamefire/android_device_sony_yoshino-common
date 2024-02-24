@@ -27,7 +27,7 @@ public class ImsSwitcher {
         if (CommonUtil.isDefaultDataSlot(mContext, subID)) {
             CSLog.d(TAG, "Default data SIM loaded");
             Intent service = new Intent(mContext, CustomizationSelectorService.class);
-            service.setAction("evaluate_action");
+            service.setAction(CustomizationSelectorService.EVALUATE_ACTION);
             mContext.startService(service);
         }
     }
