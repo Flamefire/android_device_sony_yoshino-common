@@ -33,6 +33,9 @@ import static com.yoshino.parts.Constants.*;
 public class DeviceSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
     private static final String TAG = "XperiaPartsSettings";
     private static final String CS_PACKAGE_NAME = "com.sonymobile.customizationselector";
+    private static final String PREF_EXTRA_KEY = "pref";
+    private static final int PREF_IMS = 0;
+    private static final int PREF_REAPPLY_MODEM = 1;
 
     private Intent make_CS_ActivityIntent(String className) {
         return new Intent().setClassName(CS_PACKAGE_NAME, CS_PACKAGE_NAME + "." + className);
@@ -162,7 +165,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
                     notificationPref.setEnabled(false);
                     msActPref.setEnabled(false);
 
-                    sendBroadcast(preference.getContext(), 0);
+                    sendBroadcast(preference.getContext(), CS_IMS);
                 });
                 builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
@@ -184,7 +187,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
                     notificationPref.setEnabled(true);
                     msActPref.setEnabled(true);
 
-                    sendBroadcast(preference.getContext(), 0);
+                    sendBroadcast(preference.getContext(), CS_IMS);
                 });
                 builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
@@ -210,7 +213,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
                 Settings.System.putInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, (applyModem ^ 1));
                 modemPref.setChecked(applyModem == 0);
 
-                sendBroadcast(preference.getContext(), 1);
+                sendBroadcast(preference.getContext(), CS_RE_APPLY_MODEM);
             });
             builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                 dialogInterface.dismiss();
@@ -269,14 +272,17 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
         return true;
     }
 
-    private void sendBroadcast(Context context, int pref) {
+    private void sendBroadcast(Context context, String pref) throws IllegalArgumentException{
         Intent broadcast = new Intent()
-            .putExtra("pref", pref)
+            .putExtra(pref, Settings.System.getInt(context.getContentResolver(), pref, 1))
             .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
             .setComponent(new ComponentName(CS_PACKAGE_NAME, CS_PACKAGE_NAME + ".PreferenceReceiver"));
-        if (pref == 0) broadcast.putExtra(CS_IMS, Settings.System.getInt(context.getContentResolver(), CS_IMS, 1));
-        if (pref == 1)
-            broadcast.putExtra(CS_RE_APPLY_MODEM, Settings.System.getInt(context.getContentResolver(), CS_RE_APPLY_MODEM, 1));
+        if (pref.equals(CS_IMS))
+            broadcast.putExtra(PREF_EXTRA_KEY, PREF_IMS);
+        else if (pref.equals(CS_RE_APPLY_MODEM))
+            broadcast.putExtra(PREF_EXTRA_KEY, PREF_REAPPLY_MODEM);
+        else
+            throw new IllegalArgumentException("Wrong preference: " + pref);
         context.sendBroadcast(broadcast);
     }
 }

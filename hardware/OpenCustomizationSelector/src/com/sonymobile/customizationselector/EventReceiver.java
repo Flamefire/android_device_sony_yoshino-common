@@ -17,8 +17,10 @@ import java.io.File;
 import java.io.FileReader;
 
 public class EventReceiver extends BroadcastReceiver {
-
     private static final String TAG = EventReceiver.class.getSimpleName();
+
+    public static final String CS_IMS = "cs_ims";
+
     private static final String CHANNEL_ID = "Sony Modem";
 
     private int getSubId(Context context, Intent intent) {
@@ -40,7 +42,7 @@ public class EventReceiver extends BroadcastReceiver {
                     .edit().putInt("event_subID", getSubId(context, intent)).apply();
         }
 
-        if (Settings.System.getInt(context.getContentResolver(), "cs_ims", 1) == 0) {
+        if (Settings.System.getInt(context.getContentResolver(), CS_IMS, 1) == 0) {
             CSLog.d(TAG, "IMS disabled, not parsing");
             if (!CommonUtil.isModemDefault(readModemFile()[1])) {
                 CSLog.d(TAG, "Modem not default but IMS turned off as per settings.");
