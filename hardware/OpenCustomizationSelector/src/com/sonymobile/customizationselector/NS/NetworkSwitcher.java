@@ -57,12 +57,16 @@ public class NetworkSwitcher extends Service {
 
         // Start process
         try {
-            int subID = getSubID();
-            if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                new SubIdObserver(getApplicationContext()).register(this::initProcess);
-            } else {
+            if (CommonUtil.isDualSim(appContext))
+                d("device is dual sim");
+            else
+                d("single sim device");
+
+            int subID = CommonUtil.getSubID(appContext);
+            if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
+                new SubIdObserver(appContext).register(this::initProcess);
+            else
                 initProcess(subID);
-            }
         } catch (Exception e) {
             CSLog.e(TAG, "Error: ", e);
         }
@@ -73,21 +77,6 @@ public class NetworkSwitcher extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
-    }
-
-    /**
-     * Get the subscription IDs based on phone count and sim status.
-     */
-    private int getSubID() {
-        int[] subs = null;
-        if (CommonUtil.isDualSim(getApplicationContext())) {
-            d("initSubID: device is dual sim");
-            subs = SubscriptionManager.getSubId(Settings.System.getInt(getApplicationContext().getContentResolver(), "ns_slot", 0));
-        } else {
-            d("initSubID: single sim device");
-            subs = SubscriptionManager.getSubId(0);
-        }
-        return subs == null ? SubscriptionManager.INVALID_SUBSCRIPTION_ID : subs[0];
     }
 
     private void initProcess(int subID) {

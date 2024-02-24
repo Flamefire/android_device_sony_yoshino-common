@@ -18,8 +18,8 @@ public class NSBootReceiver extends BroadcastReceiver {
             return;
         }
         if (Settings.System.getInt(context.getContentResolver(), "ns_service", 0) == 1) {
-            if (CommonUtil.isDualSim(context) && Settings.System.getInt(context.getContentResolver(), "ns_slot", -1) == -1) {
-                CSLog.d("NSBootReceiver", "Device is dual sim, but slot pref is invalid");
+            if (CommonUtil.getSimSlotIndex(context, -1) == -1) {
+                CSLog.d(TAG, "Device is dual sim, but slot pref is invalid");
                 return;
             }
             CSLog.d(TAG, "Starting service ...");
