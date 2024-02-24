@@ -22,17 +22,15 @@ public class SlotObserver {
 
     private final Runnable runnable = new Runnable() {
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
-                synchronized (new Object()) {
-                    if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        if (CommonUtil.isSIMLoaded(mContext, mSubID)) {
-                            mListener.onConnected();
-                            unregister();
-                        }
-                    } else {
+                if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                    if (CommonUtil.isSIMLoaded(mContext, mSubID)) {
+                        mListener.onConnected();
                         unregister();
                     }
+                } else {
+                    unregister();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

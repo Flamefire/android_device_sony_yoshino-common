@@ -23,18 +23,16 @@ public class SimServiceObserver {
 
     private final Runnable runnable = new Runnable() {
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
-                synchronized (new Object()) {
-                    if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
-                        if (CommonUtil.hasSignal(tm)) {
-                            mListener.onConnected();
-                            unregister();
-                        }
-                    } else {
+                if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                    TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
+                    if (CommonUtil.hasSignal(tm)) {
+                        mListener.onConnected();
                         unregister();
                     }
+                } else {
+                    unregister();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

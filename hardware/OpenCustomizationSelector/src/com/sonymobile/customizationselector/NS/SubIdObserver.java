@@ -21,14 +21,12 @@ public class SubIdObserver {
 
     private final Runnable runnable = new Runnable() {
         @Override
-        public void run() {
+        public synchronized void run() {
             try {
-                synchronized (new Object()) {
-                    int subId = getSubID();
-                    if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        mListener.onConnected(subId);
-                        unregister();
-                    }
+                int subId = getSubID();
+                if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                    mListener.onConnected(subId);
+                    unregister();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
