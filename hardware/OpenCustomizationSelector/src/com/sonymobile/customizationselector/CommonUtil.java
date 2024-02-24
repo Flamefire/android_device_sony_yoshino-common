@@ -30,12 +30,10 @@ public class CommonUtil {
 
         HashMap<String, String> configuration = DynamicConfigParser.getConfiguration(context);
         String configId = configuration.get(simId);
-        if (TextUtils.isEmpty(configId)) {
+        if (TextUtils.isEmpty(configId))
             configId = configuration.get(ANY_SIM);
-        }
-        if (configId == null || DEFAULT_CONFIG.equalsIgnoreCase(configId)) {
+        if (configId == null || DEFAULT_CONFIG.equalsIgnoreCase(configId))
             configId = "";
-        }
         String modem = ModemConfParser.parseModemConf(configId);
         CSLog.i(TAG, String.format("Returning bundle with sim id %s, modem: %s, config id: %s", simId, modem, configId));
 
@@ -153,9 +151,8 @@ public class CommonUtil {
 
     public static boolean isModemDefault(String modem) {
         for (String m : getDefaultModems()) {
-            if (m.equals(modem)) {
+            if (m.equals(modem))
                 return true;
-            }
         }
         return !modem.contains("ims") && !modem.contains("volte")
                 && !modem.contains("vilte") && !modem.contains("vowifi");

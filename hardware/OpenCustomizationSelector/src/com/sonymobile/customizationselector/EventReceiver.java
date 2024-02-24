@@ -68,10 +68,8 @@ public class EventReceiver extends BroadcastReceiver {
                 context.startService(service);
             }
         } else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
-            if (CommonUtil.isDualSim(context)) {
+            if (CommonUtil.isDualSim(context))
                 DSDataSubContentJob.scheduleJob(context);
-            }
-
             notifyStatus(context);
         }
     }
@@ -118,16 +116,14 @@ public class EventReceiver extends BroadcastReceiver {
                 String line, data = "";
 
                 BufferedReader br = new BufferedReader(new FileReader(file));
-                while ((line = br.readLine()) != null) {
+                while ((line = br.readLine()) != null)
                     data += line;
-                }
                 data = data.replace("\n", "").replace("\r", "")
                         .replace("{", "").replace("}", "").replace("\"", "").trim();
 
                 return data.equals("") ? stat : new String[]{data.split(",")[0], data.split(",")[1]};
-            } else {
+            } else
                 return stat;
-            }
         } catch (Exception e) {
             e.printStackTrace();
             return stat;

@@ -46,9 +46,9 @@ public class CustomizationSelectorSUWActivity extends Activity {
                     if ("LOADED".equals(state)) {
                         CSLog.d(TAG, "Default Sim ready");
                         handleConfiguration();
-                    } else if ("PERM_DISABLED".equals(state) || "ABSENT".equals(state) || "CARD_IO_ERROR".equals(state)) {
+                    } else if ("PERM_DISABLED".equals(state) || "ABSENT".equals(state) || "CARD_IO_ERROR".equals(state))
                         continueSetupWizard();
-                    } else if ("LOCKED".equals(state)) {
+                    else if ("LOCKED".equals(state)) {
                         CSLog.d(TAG, "Sim locked, removing timeout.");
                         StateHandler.getStateHandler(CustomizationSelectorSUWActivity.this).removeCallbacksAndMessages(null);
                     }
@@ -67,9 +67,8 @@ public class CustomizationSelectorSUWActivity extends Activity {
         }
 
         public static StateHandler getStateHandler(CustomizationSelectorSUWActivity customizationSelectorSUWActivity) {
-            if (sHandler == null || sHandler.mWeakActivity.get() == null) {
+            if (sHandler == null || sHandler.mWeakActivity.get() == null)
                 sHandler = new StateHandler(customizationSelectorSUWActivity);
-            }
             return sHandler;
         }
 
@@ -122,22 +121,17 @@ public class CustomizationSelectorSUWActivity extends Activity {
 
     public void handleConfiguration() {
         int msg;
-        boolean rebootRequired = false;
 
         StateHandler.getStateHandler(this).removeCallbacksAndMessages(null);
         Configurator configurator = new Configurator(getApplicationContext(), CommonUtil.getCarrierBundle(this));
         if (configurator.isNewConfigurationNeeded()) {
             configurator.set();
             msg = MSG_REBOOT;
-        } else {
+        } else
             msg = MSG_CONTINUE;
-        }
 
         configurator.saveConfigurationKey();
-        if (msg == MSG_REBOOT) {
-            rebootRequired = true;
-        }
-        CSLog.d(TAG, "handleConfiguration - reboot? " + rebootRequired);
+        CSLog.d(TAG, "handleConfiguration - reboot? " + (msg == MSG_REBOOT));
         StateHandler.getStateHandler(this).sendEmptyMessage(msg);
     }
 
@@ -175,10 +169,9 @@ public class CustomizationSelectorSUWActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (isSimWorking()) {
+        if (isSimWorking())
             startTimeout();
-        } else {
+        else 
             continueSetupWizard();
-        }
     }
 }

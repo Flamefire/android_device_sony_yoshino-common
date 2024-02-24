@@ -35,12 +35,10 @@ public class SimConfigId {
 
         if (!TextUtils.isEmpty(simOperator) && !TextUtils.isEmpty(subscriberId)) {
             simOperatorName = simOperatorName != null ? simOperatorName.replaceAll("[\n\r]", "") : "";
-            if (groupIdLevel1 == null) {
+            if (groupIdLevel1 == null)
                 groupIdLevel1 = "";
-            }
-            if (simSerialNumber == null) {
+            if (simSerialNumber == null)
                 simSerialNumber = "";
-            }
             hashMap.put(MCC, simOperator.substring(0, MCC_LENGTH));
             hashMap.put(MNC, simOperator.substring(MCC_LENGTH));
             hashMap.put(SP, simOperatorName.trim());
@@ -135,11 +133,10 @@ public class SimConfigId {
         CSLog.d(TAG, "***********************************");
         StringBuilder sb = new StringBuilder();
         sb.append("Best SIM configuration id= ");
-        if (TextUtils.isEmpty(id)) {
+        if (TextUtils.isEmpty(id))
             sb.append("NOT FOUND - RETURNING \"\"");
-        } else {
+        else
             sb.append(id);
-        }
         CSLog.d(TAG, sb.toString());
         CSLog.d(TAG, "***********************************");
         return id;

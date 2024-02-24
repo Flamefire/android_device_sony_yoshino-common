@@ -54,34 +54,28 @@ public class ServiceProvidersParser {
                                 if (simCombination != null) {
                                     if (MCC.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setMCC(tag);
-                                        }
                                     } else if (MNC.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setMNC(tag);
-                                        }
                                     } else if (SP.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setServiceProvider(tag);
-                                        }
                                     } else if (IMSI.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setIMSI(tag);
-                                        }
                                     } else if (GID1.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setGid1(tag);
-                                        }
                                     } else if (GID2.equalsIgnoreCase(tag)) {
                                         tag = fix(xml.nextText());
-                                        if (!TextUtils.isEmpty(tag)) {
+                                        if (!TextUtils.isEmpty(tag))
                                             simCombination.setGid2(tag);
-                                        }
                                     }
                                 }
                             }

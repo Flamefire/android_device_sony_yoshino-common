@@ -88,9 +88,8 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
     @Override
     protected void onDestroy() {
         CSLog.d(TAG, "onDestroy()");
-        if (mUserPresentReceiver != null) {
+        if (mUserPresentReceiver != null)
             unregisterReceiver(mUserPresentReceiver);
-        }
         super.onDestroy();
     }
 

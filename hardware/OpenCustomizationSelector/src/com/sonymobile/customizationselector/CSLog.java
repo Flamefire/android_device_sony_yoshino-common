@@ -52,9 +52,8 @@ public class CSLog {
 
         if (defaultSubscriptionId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
             simOP = tm.getSimOperator(defaultSubscriptionId);
-            if (simOP == null) {
+            if (simOP == null)
                 simOP = "";
-            }
             subscriberID = tm.getSubscriberId(defaultSubscriptionId);
             String simOperatorName = tm.getSimOperatorName(defaultSubscriptionId);
             simOpName = simOperatorName != null ? simOperatorName.replaceAll("[\n\r]", "").trim() : "";
@@ -73,9 +72,8 @@ public class CSLog {
                 return;
             }
         }
-        if (packageInfo != null) {
+        if (packageInfo != null)
             d(tag, "Version: " + packageInfo.versionName);
-        }
     }
 
     private static boolean sizeCheckDone = false;
@@ -88,9 +86,8 @@ public class CSLog {
             if (!logDir.exists() && !logDir.mkdirs())
                 return;
             if (!logFile.exists()) {
-                if (!logFile.createNewFile()) {
+                if (!logFile.createNewFile())
                     return;
-                }
             } else if(!sizeCheckDone) {
                 // Delete file if it grows larger than 1 MB
                 if(logFile.length() > 1024 * 1024)
@@ -106,9 +103,8 @@ public class CSLog {
             e.printStackTrace();
         } finally {
             try {
-                if (brw != null) {
+                if (brw != null)
                     brw.close();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
