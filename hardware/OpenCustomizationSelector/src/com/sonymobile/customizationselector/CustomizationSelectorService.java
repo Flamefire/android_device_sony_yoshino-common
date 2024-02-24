@@ -17,40 +17,38 @@ public class CustomizationSelectorService extends IntentService {
         super(CustomizationSelectorService.class.getName());
     }
 
-    public static void evaluateCarrierBundle(Context context) {
-        synchronized (CustomizationSelectorService.class) {
-            try {
-                CSLog.logVersion(context, TAG);
-                CSLog.logSimValues(context, TAG);
+    public static synchronized void evaluateCarrierBundle(Context context) {
+        try {
+            CSLog.logVersion(context, TAG);
+            CSLog.logSimValues(context, TAG);
 
-                if (!CommonUtil.isDirectBootEnabled()) {
-                    UserManager userManager = context.getSystemService(UserManager.class);
-                    if (userManager != null && !userManager.isUserUnlocked()) {
-                        CSLog.d(TAG, "user is locked. private app data storage is not available.");
-                        return;
-                    }
+            if (!CommonUtil.isDirectBootEnabled()) {
+                UserManager userManager = context.getSystemService(UserManager.class);
+                if (userManager != null && !userManager.isUserUnlocked()) {
+                    CSLog.d(TAG, "user is locked. private app data storage is not available.");
+                    return;
                 }
-
-                Configurator configurator = new Configurator(context, CommonUtil.getCarrierBundle(context));
-                if (configurator.isNewConfigurationNeeded()) {
-                    context.getPackageManager().setComponentEnabledSetting(new ComponentName(context, CustomizationSelectorActivity.class),
-                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
-
-                    if (isUserSetupComplete(context)) {
-                        CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, starting dialog.");
-                        context.startActivity(new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_HOME).addFlags(270565376));
-                    } else {
-                        CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, user setup not complete");
-                    }
-                } else {
-                    configurator.saveConfigurationKey();
-                    CSLog.d(TAG, "evaluateCarrierBundle - No new configuration.");
-
-                    ModemSwitcher.reApplyModem(configurator.getTargetContext());
-                }
-            } catch (Exception e) {
-                CSLog.e(TAG, "evaluateCarrierBundle - ERROR: ", e);
             }
+
+            Configurator configurator = new Configurator(context, CommonUtil.getCarrierBundle(context));
+            if (configurator.isNewConfigurationNeeded()) {
+                context.getPackageManager().setComponentEnabledSetting(new ComponentName(context, CustomizationSelectorActivity.class),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+
+                if (isUserSetupComplete(context)) {
+                    CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, starting dialog.");
+                    context.startActivity(new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_HOME).addFlags(270565376));
+                } else {
+                    CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, user setup not complete");
+                }
+            } else {
+                configurator.saveConfigurationKey();
+                CSLog.d(TAG, "evaluateCarrierBundle - No new configuration.");
+
+                ModemSwitcher.reApplyModem(configurator.getTargetContext());
+            }
+        } catch (Exception e) {
+            CSLog.e(TAG, "evaluateCarrierBundle - ERROR: ", e);
         }
     }
 
