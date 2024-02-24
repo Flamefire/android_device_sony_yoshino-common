@@ -15,13 +15,14 @@ public class SubIdObserver {
     }
 
     private final Context mContext;
-    private boolean mRegistered = false;
     private Handler mHandler;
     private Listener mListener;
 
     private final Runnable runnable = new Runnable() {
         @Override
         public synchronized void run() {
+            if(mListener == null)
+                return;
             try {
                 int subId = CommonUtil.getSubID(mContext);
                 if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
@@ -31,30 +32,28 @@ public class SubIdObserver {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (mHandler != null) {
+                if (mListener != null)
                     mHandler.postDelayed(this, 2000);
-                }
             }
         }
     };
 
     public void register(Listener listener) {
-        if (!mRegistered) {
-            mListener = listener;
+        if (mListener != null)
+            return;
+        mListener = listener;
+        if(mHandler == null)
             mHandler = new Handler(mContext.getMainLooper());
+        mHandler.post(runnable);
 
-            mHandler.post(runnable);
-            mRegistered = true;
-            CSLog.d(TAG, "Registered");
-        }
+        CSLog.d(TAG, "Registered");
     }
 
     private void unregister() {
-        mListener = null;
+        if(mListener == null)
+            return;
         mHandler.removeCallbacks(runnable);
-        mHandler = null;
-
-        mRegistered = false;
+        mListener = null;
         CSLog.d(TAG, "Unregistered");
     }
 

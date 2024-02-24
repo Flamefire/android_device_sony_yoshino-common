@@ -16,7 +16,6 @@ public class SimServiceObserver {
     }
 
     private final Context mContext;
-    private boolean mRegistered = false;
     private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
     private Handler mHandler;
     private Listener mListener;
@@ -25,19 +24,20 @@ public class SimServiceObserver {
         @Override
         public synchronized void run() {
             try {
-                if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                if (mSubID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
+                    unregister();
+                else {
                     TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
                     if (CommonUtil.hasSignal(tm)) {
                         mListener.onConnected();
                         unregister();
                     }
-                } else {
-                    unregister();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                mHandler.postDelayed(this, 2000);
+                if(mListener != null)
+                    mHandler.postDelayed(this, 2000);
             }
         }
     };
@@ -47,26 +47,22 @@ public class SimServiceObserver {
     }
 
     public void register(int subID, Listener listener) {
-        if (!mRegistered) {
-            mSubID = subID;
-            mListener = listener;
+        if (mListener != null)
+            return;
+        mSubID = subID;
+        mListener = listener;
+        if(mHandler == null)
             mHandler = new Handler(mContext.getMainLooper());
-
-            mHandler.post(runnable);
-            mRegistered = true;
-            CSLog.d(TAG, "Registered");
-        }
+        mHandler.post(runnable);
+        CSLog.d(TAG, "Registered");
     }
 
     public void unregister() {
-        if (mRegistered) {
-            mListener = null;
-            mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
-
-            mHandler.removeCallbacks(runnable);
-
-            mRegistered = false;
-            CSLog.d(TAG, "Unregistered");
-        }
+        if (mListener == null)
+            return;
+        mHandler.removeCallbacks(runnable);
+        mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
+        mListener = null;
+        CSLog.d(TAG, "Unregistered");
     }
 }
