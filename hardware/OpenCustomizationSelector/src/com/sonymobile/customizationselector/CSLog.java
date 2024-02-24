@@ -17,6 +17,7 @@ import java.util.Locale;
 public class CSLog {
 
     private static final String PREFIX = "CS-";
+    private static final String LOG_FILE = "/data/user_de/0/com.sonymobile.customizationselector/files/cs.log";
 
     public static void d(String tag, String msg) {
         Log.d(PREFIX + tag, msg);
@@ -80,20 +81,17 @@ public class CSLog {
     private static boolean sizeCheckDone = false;
 
     private static void writeLog(String tag, String msg, String type) {
-        File logDir = new File("/data/user_de/0/com.sonymobile.customizationselector/files");
-        File logFile = new File("/data/user_de/0/com.sonymobile.customizationselector/files/cs.log");
+        File logFile = new File(LOG_FILE);
+        File logDir = logFile.getParentFile();
         BufferedWriter brw = null;
         try {
-            if (!logDir.exists()) {
-                if (!logDir.mkdirs()) {
-                    return;
-                }
-            }
+            if (!logDir.exists() && !logDir.mkdirs())
+                return;
             if (!logFile.exists()) {
                 if (!logFile.createNewFile()) {
                     return;
                 }
-            }else if(!sizeCheckDone) {
+            } else if(!sizeCheckDone) {
                 // Delete file if it grows larger than 1 MB
                 if(logFile.length() > 1024 * 1024)
                     logFile.delete();
