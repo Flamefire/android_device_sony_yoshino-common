@@ -136,12 +136,10 @@ public class Configurator {
         CSLog.d(TAG, String.format("Set() - modem = '%s' - carrier config id = '%s'", mModem, mConfigId));
         if (anythingChangedSinceLastEvaluation()) {
             saveConfigurationKey();
-            if (mConfigId != null) {
+            if (mConfigId != null)
                 MiscTA.write(TA_AC_VERSION, mConfigId.getBytes(StandardCharsets.UTF_8));
-            }
-            if (!TextUtils.isEmpty(mModem)) {
+            if (!TextUtils.isEmpty(mModem))
                 new ModemConfiguration(getPreferences()).setConfiguration(mModem);
-            }
         }
     }
 }

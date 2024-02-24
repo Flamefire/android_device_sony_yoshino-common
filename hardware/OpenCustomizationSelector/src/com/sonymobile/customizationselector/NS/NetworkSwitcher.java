@@ -79,9 +79,9 @@ public class NetworkSwitcher extends Service {
     }
 
     private void initProcess(int subID) {
-        if (CommonUtil.isSIMLoaded(getApplicationContext(), subID)) {
+        if (CommonUtil.isSIMLoaded(getApplicationContext(), subID))
             new Handler(getMainLooper()).postDelayed(() -> switchDown(subID), 1400);
-        } else {
+        else {
             new SlotObserver(getApplicationContext()).register(subID,
                     () -> new Handler(getMainLooper()).postDelayed(() -> switchDown(subID), 1400));
         }
@@ -113,9 +113,8 @@ public class NetworkSwitcher extends Service {
                         handleConnection(tm, subID);
                     }
                 }, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
-            } else {
+            } else
                 handleConnection(tm, subID);
-            }
         } else {
             d("Network is not LTE, no work.");
             stopSelf();
@@ -125,9 +124,9 @@ public class NetworkSwitcher extends Service {
     private void handleConnection(TelephonyManager tm, int subID) {
         if (isAirplaneModeOn()) {
             mAirplaneModeObserver.register(() -> {
-                if (isAirplaneModeOn()) {
+                if (isAirplaneModeOn())
                     mSimServiceObserver.unregister();
-                } else {
+                else {
                     mSimServiceObserver.register(subID, () -> {
                         mAirplaneModeObserver.unregister();
                         changeNetwork(tm, subID, getOriginalNetwork(subID));

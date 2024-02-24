@@ -30,9 +30,8 @@ public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context == null) {
+        if (context == null)
             return;
-        }
 
         boolean isGloveModeEnabled = Settings.System.getInt(context.getContentResolver(), GLOVE_MODE, 0) == 1;
         SystemProperties.set(GLOVE_PROP, isGloveModeEnabled ? "1" : "0");

@@ -37,9 +37,8 @@ public class LogActivity extends Activity {
             ArrayList<String> lines = new ArrayList<>();
 
             // Get all the lines
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null)
                 lines.add(line + "\n");
-            }
             br.close();
             br = null;
 
@@ -64,9 +63,8 @@ public class LogActivity extends Activity {
                     logText.append(outLines.get(i));
                 }
 
-                if (threshTrimmed) {
+                if (threshTrimmed)
                     Toast.makeText(this, "Data trimmed to 2MB of chars", Toast.LENGTH_LONG).show();
-                }
 
                 // Clear memory as much as possible
                 lines.clear();
@@ -82,9 +80,8 @@ public class LogActivity extends Activity {
             e.printStackTrace();
         } finally {
             try {
-                if (br != null) {
+                if (br != null)
                     br.close();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -41,9 +41,8 @@ public class CustomizationSelectorService extends IntentService {
                         .addCategory(Intent.CATEGORY_HOME)
                         .addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
-                } else {
+                } else
                     CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, user setup not complete");
-                }
             } else {
                 configurator.saveConfigurationKey();
                 CSLog.d(TAG, "evaluateCarrierBundle - No new configuration.");
@@ -61,8 +60,7 @@ public class CustomizationSelectorService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (EVALUATE_ACTION.equals(intent != null ? intent.getAction() : "")) {
+        if (EVALUATE_ACTION.equals(intent != null ? intent.getAction() : ""))
             evaluateCarrierBundle(this);
-        }
     }
 }

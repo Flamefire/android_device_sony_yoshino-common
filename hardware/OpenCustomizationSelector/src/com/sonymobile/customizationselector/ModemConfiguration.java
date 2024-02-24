@@ -20,9 +20,8 @@ public class ModemConfiguration {
     }
 
     public String getModemConfiguration(String variant) {
-        if (variant == null) {
+        if (variant == null)
             variant = "";
-        }
 
         String defaultModem, modemConfig = "";
         String[] availableModemConfigurations = mModemSwitcher.getAvailableModemConfigurations();
@@ -49,13 +48,11 @@ public class ModemConfiguration {
         try {
             String currentModemConfig = ModemSwitcher.getCurrentModemConfig();
             CSLog.d(TAG, "Current modem: " + currentModemConfig);
-            if (ModemSwitcher.SINGLE_MODEM_FS.equalsIgnoreCase(currentModemConfig)) {
+            if (ModemSwitcher.SINGLE_MODEM_FS.equalsIgnoreCase(currentModemConfig))
                 return "";
-            }
             String modemConfiguration = getModemConfiguration(variant);
-            if (!TextUtils.isEmpty(modemConfiguration) && !modemConfiguration.equalsIgnoreCase(currentModemConfig)) {
+            if (!TextUtils.isEmpty(modemConfiguration) && !modemConfiguration.equalsIgnoreCase(currentModemConfig))
                 return modemConfiguration;
-            }
             CSLog.d(TAG, "updateModem - No need to update modem.");
             return "";
         } catch (IOException e) {
@@ -66,9 +63,8 @@ public class ModemConfiguration {
 
     public boolean setConfiguration(String config) {
         CSLog.d(TAG, "setConfiguration - modem configuration = " + config);
-        if (TextUtils.isEmpty(config)) {
+        if (TextUtils.isEmpty(config))
             return false;
-        }
 
         String savedConfig = mPreference.getString(SAVED_MODEM_CONFIG, "");
         if (mModemSwitcher.isModemStatusSuccess() || !savedConfig.equals(config)) {

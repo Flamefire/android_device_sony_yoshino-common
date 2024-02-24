@@ -40,18 +40,15 @@ public class DynamicConfigParser {
                         while (xml.next() != 1) {
                             if (xml.getEventType() == 2) {
                                 tag = xml.getName();
-                                if (CONFIGURATION.equals(tag)) {
+                                if (CONFIGURATION.equals(tag))
                                     configID = fix(xml.getAttributeValue(null, CONFIG_ID));
-                                }
                                 if (SIM_CONFIG_ID.equalsIgnoreCase(tag)) {
                                     String value = fix(xml.nextText());
-                                    if (!TextUtils.isEmpty(configID)) {
+                                    if (!TextUtils.isEmpty(configID))
                                         hashMap.put(value, configID);
-                                    }
                                 }
-                                if (ANY_SIM.equalsIgnoreCase(tag) && !TextUtils.isEmpty(configID)) {
+                                if (ANY_SIM.equalsIgnoreCase(tag) && !TextUtils.isEmpty(configID))
                                     hashMap.put(ANY_SIM, configID);
-                                }
                             }
                         }
                     } catch (IOException | XmlPullParserException e2) {

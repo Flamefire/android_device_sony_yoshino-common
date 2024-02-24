@@ -286,9 +286,8 @@ public class ModemSwitcher {
                 } catch (MiscTaException e) {
                     CSLog.e(TAG, "reApplyModem - There was an error clearing 2404: ", e);
                 }
-            } else {
+            } else
                 CSLog.e(TAG, "reApplyModem - 2405 was NOT re-written");
-            }
         } catch (IOException e) {
             CSLog.e(TAG, "reApplyModem - There was exception getting current modem: ", e);
         }
