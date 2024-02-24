@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
+
 import com.sonymobile.customizationselector.CSLog;
 
 public class AirplaneModeObserver extends ContentObserver {
@@ -13,11 +14,10 @@ public class AirplaneModeObserver extends ContentObserver {
     private static final String TAG = "AirplaneModeObserver";
 
     interface Listener {
-        void onChange(Uri uri);
+        void onChange();
     }
 
     private final Context mContext;
-    private boolean mRegistered = false;
     private Listener mListener = null;
 
     public AirplaneModeObserver(Context context, Handler handler) {
@@ -26,27 +26,28 @@ public class AirplaneModeObserver extends ContentObserver {
     }
 
     public void register(Listener listener) {
-        if (!mRegistered) {
-            mListener = listener;
-            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON),
-                    false, this, UserHandle.USER_CURRENT);
-            mRegistered = true;
-            CSLog.d(TAG, "Registered");
-        }
+        if (mListener != null)
+            return;
+        mContext.getContentResolver().registerContentObserver(getUri(), false, this, UserHandle.USER_CURRENT);
+        mListener = listener;
+        CSLog.d(TAG, "Registered");
     }
 
     public void unregister() {
-        if (mRegistered) {
-            mContext.getContentResolver().unregisterContentObserver(this);
-            mRegistered = false;
-            CSLog.d(TAG, "Unregistered");
-        }
+        if (mListener == null)
+            return;
+        mContext.getContentResolver().unregisterContentObserver(this);
+        mListener = null;
+        CSLog.d(TAG, "Unregistered");
+    }
+
+    private static Uri getUri(){
+        return Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON);
     }
 
     @Override
-    public void onChange(boolean b, Uri uri) {
-        if (!b) {
-            mListener.onChange(uri);
-        }
+    public void onChange(boolean selfChange, Uri uri) {
+        if (!selfChange && mListener != null && getUri().equals(uri))
+            mListener.onChange();
     }
 }
