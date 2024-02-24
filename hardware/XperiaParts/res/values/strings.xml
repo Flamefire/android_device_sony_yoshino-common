@@ -41,6 +41,7 @@
     <string name="ims_summary">Enables IMS features, such as VoLTE, VoWiFi and WiFi calling, <b>if possible</b>.</string>
     <string name="modem_title">Re-apply Modem</string>
     <string name="modem_summary">With enabled IMS, the modem crashes for some carriers if the mbn is not applied at every boot. Use this option to potentially fix such issues.</string>
+    <string name="cancel_button_label">Cancel</string>
     <string name="ultra_dim_name">Ultra-Dim</string>
     <string name="ultra_dim_label_unsupported">Unsupported on this device</string>
     <string name="ultra_dim_label_enabled">Restore screen brightness</string>

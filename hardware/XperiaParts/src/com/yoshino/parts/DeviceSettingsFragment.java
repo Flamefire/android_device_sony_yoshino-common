@@ -162,7 +162,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
 
                     sendBroadcast(preference.getContext(), 0);
                 });
-                builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+                builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     imsPref.setChecked(true);
                 });
@@ -184,7 +184,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
 
                     sendBroadcast(preference.getContext(), 0);
                 });
-                builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+                builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
                     imsPref.setChecked(false);
                 });
@@ -210,7 +210,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
 
                 sendBroadcast(preference.getContext(), 1);
             });
-            builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            builder.setNegativeButton(R.string.cancel_button_label, (dialogInterface, i) -> {
                 dialogInterface.dismiss();
                 modemPref.setChecked(applyModem == 1);
             });
