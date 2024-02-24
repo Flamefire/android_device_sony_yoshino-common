@@ -14,7 +14,7 @@ public class NSBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (context == null) {
-            CSLog.d(TAG, "Error: Context was null");
+            CSLog.e(TAG, "Context is null");
             return;
         }
         if (Settings.System.getInt(context.getContentResolver(), "ns_service", 0) == 1) {
