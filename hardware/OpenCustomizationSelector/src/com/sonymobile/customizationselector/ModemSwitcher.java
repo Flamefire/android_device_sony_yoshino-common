@@ -274,8 +274,7 @@ public class ModemSwitcher {
             CSLog.d(TAG, "reApplyModem - Re-writing 2405 with modem " + modem.replace(MODEM_FS_PATH, ""));
 
             // Store preference without checks - ModemConfiguration:75
-            ctx.getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE).edit()
-                    .putString(ModemConfiguration.SAVED_MODEM_CONFIG, modem).apply();
+            Configurator.getPreferences(ctx).edit().putString(ModemConfiguration.SAVED_MODEM_CONFIG, modem).apply();
 
             // Way of writing to Misc TA - ModemSwitcher:226
             if (writeModemToMiscTA(new File(modem).getName())) {
@@ -295,7 +294,7 @@ public class ModemSwitcher {
         }
     }
 
-    public static void revertReApplyModem(Context ctx) {
+    public static void revertReApplyModem() {
         try {
             String modem = getCurrentModemConfig();
             if (modem == null || modem.isEmpty()) {
