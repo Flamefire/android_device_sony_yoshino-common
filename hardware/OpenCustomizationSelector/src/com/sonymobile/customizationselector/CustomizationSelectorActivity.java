@@ -53,7 +53,7 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
     }
 
     @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialog, int which) {
         CSLog.d(TAG, "onClick - Reboot");
         disableActivity();
         mConfigurator.set();

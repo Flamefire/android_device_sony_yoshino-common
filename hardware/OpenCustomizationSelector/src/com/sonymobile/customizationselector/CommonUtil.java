@@ -7,13 +7,15 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
 import com.sonymobile.customizationselector.Parser.DynamicConfigParser;
 import com.sonymobile.customizationselector.Parser.ModemConfParser;
 
 import java.util.HashMap;
 import java.util.List;
 
-import static com.sonymobile.customizationselector.Parser.XmlConstants.*;
+import static com.sonymobile.customizationselector.Parser.XmlConstants.ANY_SIM;
+import static com.sonymobile.customizationselector.Parser.XmlConstants.DEFAULT_CONFIG;
 
 public class CommonUtil {
 
@@ -21,24 +23,24 @@ public class CommonUtil {
     private static final int MIN_MCC_MNC_LENGTH = 5;
 
     public static PersistableBundle getCarrierBundle(Context context) {
-        PersistableBundle persistableBundle = new PersistableBundle(3);
-
-        String id = new SimConfigId(context).getId();
+        String simId = new SimConfigId(context).getId();
 
         HashMap<String, String> configuration = DynamicConfigParser.getConfiguration(context);
-        String str = configuration.get(id);
-        if (TextUtils.isEmpty(str)) {
-            str = configuration.get(ANY_SIM);
+        String configId = configuration.get(simId);
+        if (TextUtils.isEmpty(configId)) {
+            configId = configuration.get(ANY_SIM);
         }
-        if (str == null || DEFAULT_CONFIG.equalsIgnoreCase(str)) {
-            str = "";
+        if (configId == null || DEFAULT_CONFIG.equalsIgnoreCase(configId)) {
+            configId = "";
         }
-        String parseModemConf = ModemConfParser.parseModemConf(str);
-        CSLog.i(TAG, String.format("Returning bundle with sim id %s, modem: %s, config id: %s", id, parseModemConf, str));
-        persistableBundle.putString(SIM_ID, id);
-        persistableBundle.putString("modem", parseModemConf);
-        persistableBundle.putString(CONFIG_ID, str);
-        return persistableBundle;
+        String modem = ModemConfParser.parseModemConf(configId);
+        CSLog.i(TAG, String.format("Returning bundle with sim id %s, modem: %s, config id: %s", simId, modem, configId));
+
+        PersistableBundle bundle = new PersistableBundle(3);
+        bundle.putString(Configurator.KEY_SIM_ID, simId);
+        bundle.putString(Configurator.KEY_MODEM, modem);
+        bundle.putString(Configurator.KEY_CONFIG_ID, configId);
+        return bundle;
     }
 
     public static int getDefaultSubId(Context context) {
@@ -76,15 +78,15 @@ public class CommonUtil {
         return tm != null && tm.getPhoneCount() > 1;
     }
 
-    public static boolean isMandatorySimParamsAvailable(Context context, int i) {
+    public static boolean isMandatorySimParamsAvailable(Context context, int subId) {
         TelephonyManager tm = context.getSystemService(TelephonyManager.class);
 
         if (tm != null) {
-            String simOperator = tm.getSimOperator(i);
-            String subscriberId = tm.getSubscriberId(i);
-            String simSerialNumber = tm.getSimSerialNumber(i);
-            String simOperatorName = tm.getSimOperatorName(i);
-            String groupIdLevel1 = tm.getGroupIdLevel1(i);
+            String simOperator = tm.getSimOperator(subId);
+            String subscriberId = tm.getSubscriberId(subId);
+            String simSerialNumber = tm.getSimSerialNumber(subId);
+            String simOperatorName = tm.getSimOperatorName(subId);
+            String groupIdLevel1 = tm.getGroupIdLevel1(subId);
             CSLog.d(TAG, "SimOperator= " + simOperator + ", IMSI= " + subscriberId + ", ICCID = " + simSerialNumber
                     + ", SPN = " + simOperatorName + ", gid1 = " + groupIdLevel1);
 

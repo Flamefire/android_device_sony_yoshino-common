@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.PersistableBundle;
 import android.os.SystemProperties;
 import android.provider.Settings;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import com.sonymobile.miscta.MiscTA;
@@ -38,9 +39,9 @@ public class Configurator {
     private final Context mContext;
     private String mConfigId = "", mModem = "";
 
-    public Configurator(Context context, PersistableBundle persistableBundle) {
+    public Configurator(Context context, PersistableBundle bundle) {
         this.mContext = context;
-        this.mBundle = persistableBundle;
+        this.mBundle = bundle;
     }
 
     public static void clearMiscTaConfigId() {
@@ -88,7 +89,7 @@ public class Configurator {
     private String getIccid() {
         TelephonyManager tm = mContext.getSystemService(TelephonyManager.class);
         int defaultSubId = CommonUtil.getDefaultSubId(mContext);
-        String simSerialNumber = (tm == null || defaultSubId == -1) ? "" : tm.getSimSerialNumber(defaultSubId);
+        String simSerialNumber = (tm == null || defaultSubId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) ? "" : tm.getSimSerialNumber(defaultSubId);
         CSLog.d(TAG, "getIccid: " + simSerialNumber);
         return simSerialNumber != null ? simSerialNumber : "";
     }

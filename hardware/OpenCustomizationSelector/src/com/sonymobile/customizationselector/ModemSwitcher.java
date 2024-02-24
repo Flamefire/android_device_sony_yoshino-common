@@ -27,6 +27,7 @@ public class ModemSwitcher {
     private static final String RESET_MODEM_ST2 = "reset_modemst2";
 
     public static final String MODEM_FS_PATH = Environment.getRootDirectory() + "/etc/customization/modem/";
+    public static final String MODEM_REPORT_FILE = "/cache/modem/modem_switcher_report";
     public static final String MODEM_STATUS_FILE = "/cache/modem/modem_switcher_status";
     public static final String SINGLE_MODEM_FS = "single_filesystem";
 
@@ -42,14 +43,15 @@ public class ModemSwitcher {
         private final String modemST1Name;
         private final String modemST2Name;
 
-        ModemFilter(String str, String str2) {
-            this.modemST1Name = str;
-            this.modemST2Name = str2;
+        ModemFilter(String st1Name, String st2Name) {
+            this.modemST1Name = st1Name;
+            this.modemST2Name = st2Name;
         }
 
-        public boolean accept(File file, String str) {
-            // Actual: (str.equals(this.modemST1Name) || str.equals(this.modemST2Name)) ? false : str.endsWith("_tar.mbn")
-            return !str.equals(this.modemST1Name) && !str.equals(this.modemST2Name) && str.endsWith("_tar.mbn");
+        public boolean accept(File file, String fileName) {
+            if (fileName.equals(modemST1Name) || fileName.equals(modemST2Name))
+                return false;
+            return fileName.endsWith(ModemConfiguration.MODEM_APPENDIX);
         }
     }
 
@@ -63,16 +65,16 @@ public class ModemSwitcher {
         }
     }
 
-    private static String lookupSymlinkTarget(String str) {
-        String name;
+    private static String lookupSymlinkTarget(String filename) {
+        String resolvedName;
         try {
-            name = new File(MODEM_FS_PATH, str).getCanonicalFile().getName();
+            resolvedName = new File(MODEM_FS_PATH, filename).getCanonicalFile().getName();
         } catch (IOException e) {
             CSLog.e(TAG, "Error when getting canonical File: ", e);
-            name = str;
+            resolvedName = filename;
         }
-        CSLog.d(TAG, "Target filename of: " + str + " is: " + name);
-        return name;
+        CSLog.d(TAG, "Target filename of: " + filename + " is: " + resolvedName);
+        return resolvedName;
     }
 
     private static ModemStatus readModemAndStatus() {
@@ -182,8 +184,9 @@ public class ModemSwitcher {
 
             if (new File(MODEM_FS_PATH, lookupSymlinkTarget).exists()) {
                 if (DEFAULT_MODEM.equals(lookupSymlinkTarget)) {
-                    CSLog.e(TAG, "Default modem is a file node that does not point to valid modem fs");
-                    throw new IOException("Default modem is a file node that does not point to valid modem fs");
+                    String msg = "Default modem is a file node that does not point to valid modem fs";
+                    CSLog.e(TAG, msg);
+                    throw new IOException(msg);
                 }
                 return MODEM_FS_PATH + lookupSymlinkTarget;
 
@@ -240,8 +243,8 @@ public class ModemSwitcher {
         return false;
     }
 
-    public static boolean writeModemToMiscTA(String str) {
-        byte[] bytes = str.getBytes(StandardCharsets.UTF_8);
+    public static boolean writeModemToMiscTA(String modemFileName) {
+        byte[] bytes = modemFileName.getBytes(StandardCharsets.UTF_8);
         byte[] bArr = new byte[(bytes.length + MODEM_MAGIC_COMMAND_LENGTH)];
         bArr[0] = MODEM_MISC_TA_MAGIC1;
         bArr[1] = MODEM_MISC_TA_MAGIC2;

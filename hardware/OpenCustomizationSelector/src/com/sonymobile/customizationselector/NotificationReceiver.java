@@ -11,7 +11,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (context != null) {
-            Settings.System.putInt(context.getContentResolver(), "cs_notification", 0);
+            Settings.System.putInt(context.getContentResolver(), EventReceiver.CS_NOTIFICATION, 0);
             context.getSystemService(NotificationManager.class).cancel(1);
         }
     }
