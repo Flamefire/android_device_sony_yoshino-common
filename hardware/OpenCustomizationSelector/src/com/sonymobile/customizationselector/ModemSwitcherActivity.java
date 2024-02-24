@@ -109,10 +109,10 @@ public class ModemSwitcherActivity extends Activity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    String searchString = s.toString().toLowerCase();
                     ArrayList<String> sModems = new ArrayList<>();
                     for (String modemName : modemList) {
-                        if (modemName.toLowerCase(Locale.getDefault())
-                                .contains(s.toString().toLowerCase(Locale.getDefault()))) {
+                        if (modemName.toLowerCase().contains(searchString)) {
                             sModems.add(modemName);
                         }
                     }
