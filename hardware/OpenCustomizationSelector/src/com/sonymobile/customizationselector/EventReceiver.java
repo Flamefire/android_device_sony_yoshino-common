@@ -31,7 +31,7 @@ public class EventReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if (context == null || intent == null) {
-            CSLog.d(TAG, "Context or Intent was null.");
+            CSLog.e(TAG, "Context or Intent is null");
             return;
         }
 

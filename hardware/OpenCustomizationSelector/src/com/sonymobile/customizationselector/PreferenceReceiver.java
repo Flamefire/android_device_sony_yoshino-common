@@ -19,7 +19,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null || context == null) {
-            CSLog.e(TAG, "Context or intent null !");
+            CSLog.e(TAG, "Context or Intent is null");
             return;
         }
 
