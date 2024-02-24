@@ -77,10 +77,10 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
         }
 
         disableActivity();
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent()
+            .setAction(Intent.ACTION_MAIN)
+            .addCategory(Intent.CATEGORY_HOME)
+            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

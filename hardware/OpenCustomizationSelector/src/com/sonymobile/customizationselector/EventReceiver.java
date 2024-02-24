@@ -64,8 +64,8 @@ public class EventReceiver extends BroadcastReceiver {
 
             if (CommonUtil.isDefaultDataSlot(context, getSubId(context, intent))) {
                 CSLog.d(TAG, "Default data SIM loaded");
-                Intent service = new Intent(context, CustomizationSelectorService.class);
-                service.setAction(CustomizationSelectorService.EVALUATE_ACTION);
+                Intent service = new Intent(context, CustomizationSelectorService.class)
+                    .setAction(CustomizationSelectorService.EVALUATE_ACTION);
                 context.startService(service);
             }
         } else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
@@ -95,8 +95,9 @@ public class EventReceiver extends BroadcastReceiver {
                             .bigText("Status: " + status[0] + "\nConfig: " + status[1] +
                                     "\nCust ID: " + SystemProperties.get(Configurator.PROP_TA_AC_VERSION, "N/A")))
                     .setColorized(true)
-                    .addAction(R.drawable.ic_baseline_sim_card_24, "Disable Notification",
-                            PendingIntent.getBroadcast(context, 1, new Intent(context, NotificationReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT))
+                    .addAction(R.drawable.ic_baseline_sim_card_24,
+                               "Disable Notification",
+                               PendingIntent.getBroadcast(context, 1, new Intent(context, NotificationReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT))
                     .build());
         }
     }
