@@ -33,6 +33,11 @@ import static com.yoshino.parts.Constants.*;
 
 public class DeviceSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
     private static final String TAG = "XperiaPartsSettings";
+    private static final String CS_PACKAGE_NAME = "com.sonymobile.customizationselector";
+
+    private Intent make_CS_ActivityIntent(String className) {
+        return new Intent().setClassName(CS_PACKAGE_NAME, CS_PACKAGE_NAME + "." + className);
+    }
 
     @Override
     public void onCreatePreferences(Bundle bundle, String key) {
@@ -57,24 +62,21 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
         Preference statusPref = findPreference(CS_STATUS);
         assert statusPref != null;
         statusPref.setOnPreferenceClickListener(preference -> {
-            preference.getContext().startActivity(new Intent()
-                    .setClassName("com.sonymobile.customizationselector", "com.sonymobile.customizationselector.StatusActivity"));
+            preference.getContext().startActivity(make_CS_ActivityIntent("StatusActivity"));
             return true;
         });
 
         Preference logPref = findPreference(CS_LOG);
         assert logPref != null;
         logPref.setOnPreferenceClickListener(preference -> {
-            preference.getContext().startActivity(new Intent()
-                    .setClassName("com.sonymobile.customizationselector", "com.sonymobile.customizationselector.LogActivity"));
+            preference.getContext().startActivity(make_CS_ActivityIntent("LogActivity"));
             return true;
         });
 
         Preference msActPref = findPreference(MODEM_SWITCHER);
         assert msActPref != null;
         msActPref.setOnPreferenceClickListener(preference -> {
-            preference.getContext().startActivity(new Intent()
-                    .setClassName("com.sonymobile.customizationselector", "com.sonymobile.customizationselector.ModemSwitcherActivity"));
+            preference.getContext().startActivity(make_CS_ActivityIntent("ModemSwitcherActivity"));
             return true;
         });
 
@@ -269,13 +271,13 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
     }
 
     private void sendBroadcast(Context context, int pref) {
-        Intent broadcast = new Intent();
-        broadcast.putExtra("pref", pref);
+        Intent broadcast = new Intent()
+            .putExtra("pref", pref)
+            .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+            .setComponent(new ComponentName(CS_PACKAGE_NAME, CS_PACKAGE_NAME + ".PreferenceReceiver"));
         if (pref == 0) broadcast.putExtra(CS_IMS, Settings.System.getInt(context.getContentResolver(), CS_IMS, 1));
         if (pref == 1)
             broadcast.putExtra(CS_RE_APPLY_MODEM, Settings.System.getInt(context.getContentResolver(), CS_RE_APPLY_MODEM, 1));
-        broadcast.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES).setComponent(new ComponentName("com.sonymobile.customizationselector",
-                "com.sonymobile.customizationselector.PreferenceReceiver"));
         context.sendBroadcast(broadcast);
     }
 }
