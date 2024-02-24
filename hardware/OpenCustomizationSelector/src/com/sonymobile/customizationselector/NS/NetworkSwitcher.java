@@ -41,8 +41,10 @@ public class NetworkSwitcher extends Service {
     @Override
     public void onCreate() {
         d("onCreate");
-        mAirplaneModeObserver = new AirplaneModeObserver(getApplicationContext(), new Handler(getMainLooper()));
-        mSimServiceObserver = new SimServiceObserver(getApplicationContext());
+        final Context appContext = getApplicationContext();
+
+        mAirplaneModeObserver = new AirplaneModeObserver(appContext, new Handler(getMainLooper()));
+        mSimServiceObserver = new SimServiceObserver(appContext);
         mUnlockObserver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -133,17 +135,15 @@ public class NetworkSwitcher extends Service {
 
     private void handleConnection(TelephonyManager tm, int subID) {
         if (isAirplaneModeOn()) {
-            mAirplaneModeObserver.register(uri -> {
-                if (uri != null && uri == Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON)) {
-                    if (isAirplaneModeOn()) {
-                        mSimServiceObserver.unregister();
-                    } else {
-                        mSimServiceObserver.register(subID, () -> {
-                            mAirplaneModeObserver.unregister();
-                            changeNetwork(tm, subID, getOriginalNetwork(subID));
-                            stopSelf();
-                        });
-                    }
+            mAirplaneModeObserver.register(() -> {
+                if (isAirplaneModeOn()) {
+                    mSimServiceObserver.unregister();
+                } else {
+                    mSimServiceObserver.register(subID, () -> {
+                        mAirplaneModeObserver.unregister();
+                        changeNetwork(tm, subID, getOriginalNetwork(subID));
+                        stopSelf();
+                    });
                 }
             });
         } else {
@@ -151,7 +151,7 @@ public class NetworkSwitcher extends Service {
                 changeNetwork(tm, subID, getOriginalNetwork(subID));
                 stopSelf();
             } else {
-                new SimServiceObserver(getApplicationContext()).register(subID, () -> {
+                mSimServiceObserver.register(subID, () -> {
                     changeNetwork(tm, subID, getOriginalNetwork(subID));
                     stopSelf();
                 });
