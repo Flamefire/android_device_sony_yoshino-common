@@ -58,8 +58,7 @@ public class ModemSwitcherActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mPreference = (CommonUtil.isDirectBootEnabled() ? createDeviceProtectedStorageContext() : this)
-                .getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE);
+        mPreference = Configurator.getPreferences(this);
 
         setRequestedOrientation(1);
         mModemSwitcher = new ModemSwitcher();

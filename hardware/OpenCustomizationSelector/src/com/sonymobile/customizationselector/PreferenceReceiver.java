@@ -27,8 +27,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
         if (pref == PREF_IMS) {
             int change = intent.getIntExtra(EventReceiver.CS_IMS, DISABLED);
             CSLog.d(TAG, "change received: " + change);
-            int subID = context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
-                    .getInt(EventReceiver.SUBID_KEY, SubscriptionManager.INVALID_SUBSCRIPTION_ID);
+            int subID = Configurator.getPreferences(context).getInt(EventReceiver.SUBID_KEY, SubscriptionManager.INVALID_SUBSCRIPTION_ID);
             if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
                 CSLog.e(TAG, "Invalid sub ID, returning");
                 return;
@@ -44,7 +43,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
             if (apply == ENABLED)
                 ModemSwitcher.reApplyModem(context);
             else if (apply == DISABLED)
-                ModemSwitcher.revertReApplyModem(context);
+                ModemSwitcher.revertReApplyModem();
             context.getSystemService(PowerManager.class).reboot(context.getString(R.string.reboot_reason));
         } else
             CSLog.d(TAG, "Invalid pref, returning ...");
