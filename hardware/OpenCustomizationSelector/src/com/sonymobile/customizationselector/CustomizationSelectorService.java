@@ -37,8 +37,10 @@ public class CustomizationSelectorService extends IntentService {
 
                 if (isUserSetupComplete(context)) {
                     CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, starting dialog.");
-                    context.startActivity(new Intent(Intent.ACTION_MAIN, null).addCategory(Intent.CATEGORY_HOME)
-                        .addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    Intent intent = new Intent(Intent.ACTION_MAIN, null)
+                        .addCategory(Intent.CATEGORY_HOME)
+                        .addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(intent);
                 } else {
                     CSLog.d(TAG, "evaluateCarrierBundle - Need to reboot, user setup not complete");
                 }
