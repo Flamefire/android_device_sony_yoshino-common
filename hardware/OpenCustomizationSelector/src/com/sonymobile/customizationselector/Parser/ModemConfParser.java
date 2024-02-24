@@ -22,9 +22,9 @@ public class ModemConfParser {
         File oemDir = new File(OEM_PATH + CONF_PATH);
         StringBuilder filePath = new StringBuilder();
 
-        if (oemDir.exists() && oemDir.isDirectory()) {
+        if (oemDir.exists() && oemDir.isDirectory())
             filePath.append(oemDir.toString());
-        } else {
+        else {
             filePath.append(Environment.getRootDirectory());
             filePath.append(LEGACY_PATH);
         }
@@ -37,11 +37,10 @@ public class ModemConfParser {
         File modemFileName = new File(filePath.toString());
         if (!modemFileName.exists() && !TextUtils.isEmpty(conf)) {
             CSLog.d(TAG, "setupFilePaths - Not found: " + modemFileName.getAbsoluteFile());
-            if (oemDir.exists() && oemDir.isDirectory()) {
+            if (oemDir.exists() && oemDir.isDirectory())
                 modemFileName = new File(oemDir + MODEM_CONF);
-            } else {
+            else
                 modemFileName = new File(Environment.getRootDirectory() + LEGACY_PATH + MODEM_CONF);
-            }
         }
         CSLog.d(TAG, "setupFilePaths - path: " + modemFileName.getAbsoluteFile());
         return parseModemFileName(modemFileName);
@@ -49,28 +48,25 @@ public class ModemConfParser {
 
     private static String parseModemFileName(File modemFile) {
         String modemVariant = "";
-        if (modemFile == null || !modemFile.exists()) {
+        if (modemFile == null || !modemFile.exists())
             return modemVariant;
-        }
 
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(modemFile), StandardCharsets.UTF_8));
             String line = br.readLine();
-            if (line != null) {
+            if (line != null)
                 modemVariant = line.trim();
-            } else {
+            else
                 modemVariant = "";
-            }
         } catch (FileNotFoundException e) {
             CSLog.w(TAG, "File not found: " + modemFile);
         } catch (IOException e) {
             CSLog.e(TAG, "IOException: " + modemFile, e);
         } finally {
             try {
-                if (br != null) {
+                if (br != null)
                     br.close();
-                }
             } catch (IOException e) {
                 CSLog.e(TAG, "IOException: while closing reader", e);
             }

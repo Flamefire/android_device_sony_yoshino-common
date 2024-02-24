@@ -64,9 +64,8 @@ public class DSDataSubContentJob extends JobService {
 
     public boolean onStopJob(JobParameters jobParameters) {
         CSLog.d(TAG, "onStopJob");
-        if (mConfigurationTask != null) {
+        if (mConfigurationTask != null)
             mConfigurationTask.cancel(true);
-        }
         return true;
     }
 }

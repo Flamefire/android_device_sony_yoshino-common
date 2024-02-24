@@ -32,9 +32,8 @@ public class ModemSwitcherActivity extends Activity {
     private void applyModem(String modemFileName) {
         CSLog.d(TAG, "selected modem is " + modemFileName);
 
-        if (mModemSwitcher.setModemConfiguration(ModemSwitcher.MODEM_FS_PATH + modemFileName)) {
+        if (mModemSwitcher.setModemConfiguration(ModemSwitcher.MODEM_FS_PATH + modemFileName))
             ((PowerManager) getSystemService("power")).reboot(getApplicationContext().getString(R.string.reboot_reason_modem_debug));
-        }
     }
 
     private void saveInitialModem(String initialModem) {
@@ -96,9 +95,8 @@ public class ModemSwitcherActivity extends Activity {
             mModemListView = findViewById(R.id.modem_list);
             setupListAdapter(modemList);
             button.setOnClickListener(view -> {
-                if (mInitialModem != null) {
+                if (mInitialModem != null)
                     verifyPick(mInitialModem);
-                }
             });
 
             editText.addTextChangedListener(new TextWatcher() {
@@ -111,9 +109,8 @@ public class ModemSwitcherActivity extends Activity {
                     String searchString = s.toString().toLowerCase();
                     ArrayList<String> sModems = new ArrayList<>();
                     for (String modemName : modemList) {
-                        if (modemName.toLowerCase().contains(searchString)) {
+                        if (modemName.toLowerCase().contains(searchString))
                             sModems.add(modemName);
-                        }
                     }
 
                     setupListAdapter(sModems);
@@ -134,9 +131,8 @@ public class ModemSwitcherActivity extends Activity {
         mModemListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, modemList));
         mModemListView.setOnItemClickListener((adapterView, view, i, j) -> {
             Object itemAtPosition = mModemListView.getItemAtPosition(i);
-            if (itemAtPosition != null) {
+            if (itemAtPosition != null)
                 verifyPick(itemAtPosition.toString());
-            }
         });
     }
 }

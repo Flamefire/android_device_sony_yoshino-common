@@ -42,9 +42,8 @@ public class ImsSwitcher {
                 builder.setPositiveButton(R.string.ok_button_label, (dialogInterface, i) -> dialogInterface.dismiss());
                 AlertDialog dialog = builder.create();
                 dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-                if (!dialog.isShowing()) {
+                if (!dialog.isShowing())
                     dialog.show();
-                }
             } else {
                 String[] defaultModems = CommonUtil.getDefaultModems();
                 String build = SystemProperties.get("ro.build.flavor", "none");
@@ -88,9 +87,8 @@ public class ImsSwitcher {
             });
             AlertDialog dialog = builder.create();
             dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-            if (!dialog.isShowing()) {
+            if (!dialog.isShowing())
                 dialog.show();
-            }
         }
     }
 }

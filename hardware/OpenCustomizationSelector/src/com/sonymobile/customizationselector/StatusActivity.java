@@ -33,16 +33,14 @@ public class StatusActivity extends Activity {
             br = new BufferedReader(new FileReader(file));
             String line;
 
-            while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null)
                 data.append(line).append("\n");
-            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
-                if (br != null) {
+                if (br != null)
                     br.close();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
