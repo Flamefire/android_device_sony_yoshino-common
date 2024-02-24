@@ -16,7 +16,7 @@ public class ModemConfiguration {
     private final SharedPreferences mPreference;
 
     public ModemConfiguration(SharedPreferences sharedPreferences) {
-        this.mPreference = sharedPreferences;
+        mPreference = sharedPreferences;
     }
 
     public String getModemConfiguration(String variant) {

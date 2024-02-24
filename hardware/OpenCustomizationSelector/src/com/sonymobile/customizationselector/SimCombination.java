@@ -4,7 +4,7 @@ public final class SimCombination {
 
     private String mGid1 = null;
     private String mGid2 = null;
-    private String mImsi = null;
+    private String mIMSI = null;
     private String mMCC = null;
     private String mMNC = null;
     private String mSP = null;
@@ -14,58 +14,58 @@ public final class SimCombination {
     }
 
     public String getGid1() {
-        return this.mGid1;
+        return mGid1;
     }
 
     public String getGid2() {
-        return this.mGid2;
+        return mGid2;
     }
 
     public String getIMSI() {
-        return this.mImsi;
+        return mIMSI;
     }
 
     public String getMCC() {
-        return this.mMCC;
+        return mMCC;
     }
 
     public String getMNC() {
-        return this.mMNC;
+        return mMNC;
     }
 
     public String getServiceProvider() {
-        return this.mSP;
+        return mSP;
     }
 
     public String getSimConfigId() {
-        return this.mSimConfigId;
+        return mSimConfigId;
     }
 
-    public void setGid1(String str) {
-        this.mGid1 = str;
+    public void setGid1(String gid1) {
+        mGid1 = gid1;
     }
 
-    public void setGid2(String str) {
-        this.mGid2 = str;
+    public void setGid2(String gid2) {
+        mGid2 = gid2;
     }
 
-    public void setIMSI(String str) {
-        this.mImsi = str;
+    public void setIMSI(String imsi) {
+        mIMSI = imsi;
     }
 
-    public void setMCC(String str) {
-        this.mMCC = str;
+    public void setMCC(String mcc) {
+        mMCC = mcc;
     }
 
-    public void setMNC(String str) {
-        this.mMNC = str;
+    public void setMNC(String mnc) {
+        mMNC = mnc;
     }
 
-    public void setServiceProvider(String str) {
-        this.mSP = str;
+    public void setServiceProvider(String sp) {
+        mSP = sp;
     }
 
-    public void setSimConfigId(String str) {
-        this.mSimConfigId = str;
+    public void setSimConfigId(String configId) {
+        mSimConfigId = configId;
     }
 }

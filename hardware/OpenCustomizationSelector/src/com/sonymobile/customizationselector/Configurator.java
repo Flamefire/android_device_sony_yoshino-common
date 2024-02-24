@@ -40,8 +40,8 @@ public class Configurator {
     private String mConfigId = "", mModem = "";
 
     public Configurator(Context context, PersistableBundle bundle) {
-        this.mContext = context;
-        this.mBundle = bundle;
+        mContext = context;
+        mBundle = bundle;
     }
 
     public static void clearMiscTaConfigId() {
@@ -120,7 +120,6 @@ public class Configurator {
                 CSLog.d(TAG, "isNewConfigurationNeeded - Modem: " + mModem);
                 CSLog.d(TAG, "isNewConfigurationNeeded - Carrier Config Id: " + mConfigId);
             }
-            // Actual: (this.mConfigId == null && TextUtils.isEmpty(this.mModem)) ? false : true
             return mConfigId != null || !TextUtils.isEmpty(mModem);
         } else {
             CSLog.d(TAG, "isNewConfigurationNeeded - ConfigKey not updated, no need to evaluate");

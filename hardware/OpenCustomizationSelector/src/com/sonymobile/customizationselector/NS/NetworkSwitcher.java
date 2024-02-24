@@ -35,24 +35,24 @@ public class NetworkSwitcher extends Service {
     private static final String NS_LOWER_NETWORK = "ns_lowNet";
     private static final String NS_PREFERRED = "ns_preferred";
 
-    private AirplaneModeObserver airplaneModeObserver;
-    private SimServiceObserver simServiceObserver;
+    private AirplaneModeObserver mAirplaneModeObserver;
+    private SimServiceObserver mSimServiceObserver;
     // Set until the phone is unlocked
-    private BroadcastReceiver unlockObserver;
+    private BroadcastReceiver mUnlockObserver;
 
     @Override
     public void onCreate() {
         d("onCreate");
-        airplaneModeObserver = new AirplaneModeObserver(getApplicationContext(), new Handler(getMainLooper()));
-        simServiceObserver = new SimServiceObserver(getApplicationContext());
-        unlockObserver = new BroadcastReceiver() {
+        mAirplaneModeObserver = new AirplaneModeObserver(getApplicationContext(), new Handler(getMainLooper()));
+        mSimServiceObserver = new SimServiceObserver(getApplicationContext());
+        mUnlockObserver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                unregisterReceiver(unlockObserver);
-                unlockObserver = null;
+                unregisterReceiver(mUnlockObserver);
+                mUnlockObserver = null;
             }
         };
-        registerReceiver(unlockObserver, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
+        registerReceiver(mUnlockObserver, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
 
         // Start process
         try {
@@ -112,11 +112,11 @@ public class NetworkSwitcher extends Service {
             setOriginalNetwork(subID, currentNetwork);
             changeNetwork(tm, subID, getLowerNetwork());
 
-            if (CommonUtil.isDirectBootEnabled() && unlockObserver != null) {
+            if (CommonUtil.isDirectBootEnabled() && mUnlockObserver != null) {
                 // Delay resetting the network until phone is unlocked.
                 // The current unlock observer is no longer required
-                unregisterReceiver(unlockObserver);
-                unlockObserver = null;
+                unregisterReceiver(mUnlockObserver);
+                mUnlockObserver = null;
                 registerReceiver(new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -135,13 +135,13 @@ public class NetworkSwitcher extends Service {
 
     private void handleConnection(TelephonyManager tm, int subID) {
         if (isAirplaneModeOn()) {
-            airplaneModeObserver.register(uri -> {
+            mAirplaneModeObserver.register(uri -> {
                 if (uri != null && uri == Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON)) {
                     if (isAirplaneModeOn()) {
-                        simServiceObserver.unregister();
+                        mSimServiceObserver.unregister();
                     } else {
-                        simServiceObserver.register(subID, () -> {
-                            airplaneModeObserver.unregister();
+                        mSimServiceObserver.register(subID, () -> {
+                            mAirplaneModeObserver.unregister();
                             changeNetwork(tm, subID, getOriginalNetwork(subID));
                             stopSelf();
                         });
