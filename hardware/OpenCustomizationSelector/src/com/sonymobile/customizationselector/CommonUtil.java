@@ -72,19 +72,19 @@ public class CommonUtil {
     }
 
     public static boolean isDualSim(Context context) {
-        TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
-        return telephonyManager != null && telephonyManager.getPhoneCount() > 1;
+        TelephonyManager tm = context.getSystemService(TelephonyManager.class);
+        return tm != null && tm.getPhoneCount() > 1;
     }
 
     public static boolean isMandatorySimParamsAvailable(Context context, int i) {
-        TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
+        TelephonyManager tm = context.getSystemService(TelephonyManager.class);
 
-        if (telephonyManager != null) {
-            String simOperator = telephonyManager.getSimOperator(i);
-            String subscriberId = telephonyManager.getSubscriberId(i);
-            String simSerialNumber = telephonyManager.getSimSerialNumber(i);
-            String simOperatorName = telephonyManager.getSimOperatorName(i);
-            String groupIdLevel1 = telephonyManager.getGroupIdLevel1(i);
+        if (tm != null) {
+            String simOperator = tm.getSimOperator(i);
+            String subscriberId = tm.getSubscriberId(i);
+            String simSerialNumber = tm.getSimSerialNumber(i);
+            String simOperatorName = tm.getSimOperatorName(i);
+            String groupIdLevel1 = tm.getGroupIdLevel1(i);
             CSLog.d(TAG, "SimOperator= " + simOperator + ", IMSI= " + subscriberId + ", ICCID = " + simSerialNumber
                     + ", SPN = " + simOperatorName + ", gid1 = " + groupIdLevel1);
 
@@ -98,15 +98,15 @@ public class CommonUtil {
     }
 
     public static boolean isSIMLoaded(Context context, int subID) {
-        TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
+        TelephonyManager tm = context.getSystemService(TelephonyManager.class);
 
-        if (telephonyManager != null && subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+        if (tm != null && subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
             int slotIndex = SubscriptionManager.getSlotIndex(subID);
             if (slotIndex != SubscriptionManager.INVALID_SIM_SLOT_INDEX) {
-                boolean isLoaded = telephonyManager.getSimState(slotIndex) == TelephonyManager.SIM_STATE_READY
-                        && !TextUtils.isEmpty(telephonyManager.getSubscriberId(subID))
-                        && !TextUtils.isEmpty(telephonyManager.getSimOperator(subID))
-                        && telephonyManager.getSimOperator(subID).length() >= MIN_MCC_MNC_LENGTH;
+                boolean isLoaded = tm.getSimState(slotIndex) == TelephonyManager.SIM_STATE_READY
+                        && !TextUtils.isEmpty(tm.getSubscriberId(subID))
+                        && !TextUtils.isEmpty(tm.getSimOperator(subID))
+                        && tm.getSimOperator(subID).length() >= MIN_MCC_MNC_LENGTH;
 
                 CSLog.d(TAG, "isSIMLoaded: " + isLoaded);
                 return isLoaded;
