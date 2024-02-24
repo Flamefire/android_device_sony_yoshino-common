@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.telephony.CellSignalStrength;
 import android.telephony.RadioAccessFamily;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -149,7 +148,7 @@ public class NetworkSwitcher extends Service {
                 }
             });
         } else {
-            if (tm.getSignalStrength() != null && tm.getSignalStrength().getLevel() != CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
+            if (CommonUtil.hasSignal(tm)) {
                 changeNetwork(tm, subID, getOriginalNetwork(subID));
                 stopSelf();
             } else {
