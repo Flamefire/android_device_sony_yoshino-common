@@ -16,7 +16,7 @@ public class ImsSwitcher {
     private final Context mContext;
 
     public ImsSwitcher(Context context) {
-        this.mContext = context;
+        mContext = context;
     }
 
     public void switchOnIMS(int subID) {

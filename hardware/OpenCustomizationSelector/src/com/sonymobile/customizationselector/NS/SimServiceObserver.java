@@ -16,20 +16,20 @@ public class SimServiceObserver {
     }
 
     private final Context mContext;
+    private boolean mRegistered = false;
+    private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
+    private Handler mHandler;
+    private Listener mListener;
 
-    private boolean registered = false;
-    private int subID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
-
-    private Handler handler;
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             try {
                 synchronized (new Object()) {
-                    if (subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(subID);
+                    if (mSubID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
+                        TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
                         if (tm.getSignalStrength() != null && tm.getSignalStrength().getLevel() != CellSignalStrength.SIGNAL_STRENGTH_NONE_OR_UNKNOWN) {
-                            listener.onConnected();
+                            mListener.onConnected();
                             unregister();
                         }
                     } else {
@@ -39,37 +39,35 @@ public class SimServiceObserver {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                handler.postDelayed(this, 2000);
+                mHandler.postDelayed(this, 2000);
             }
         }
     };
 
-    private Listener listener;
-
     public SimServiceObserver(Context context) {
-        this.mContext = context;
+        mContext = context;
     }
 
     public void register(int subID, Listener listener) {
-        if (!registered) {
-            this.subID = subID;
-            this.listener = listener;
-            handler = new Handler(mContext.getMainLooper());
+        if (!mRegistered) {
+            mSubID = subID;
+            mListener = listener;
+            mHandler = new Handler(mContext.getMainLooper());
 
-            handler.post(runnable);
-            registered = true;
+            mHandler.post(runnable);
+            mRegistered = true;
             CSLog.d(TAG, "Registered");
         }
     }
 
     public void unregister() {
-        if (registered) {
-            listener = null;
-            subID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
+        if (mRegistered) {
+            mListener = null;
+            mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
 
-            handler.removeCallbacks(runnable);
+            mHandler.removeCallbacks(runnable);
 
-            registered = false;
+            mRegistered = false;
             CSLog.d(TAG, "Unregistered");
         }
     }

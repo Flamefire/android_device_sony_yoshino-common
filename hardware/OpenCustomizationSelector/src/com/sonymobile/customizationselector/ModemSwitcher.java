@@ -44,8 +44,8 @@ public class ModemSwitcher {
         private final String modemST2Name;
 
         ModemFilter(String st1Name, String st2Name) {
-            this.modemST1Name = st1Name;
-            this.modemST2Name = st2Name;
+            modemST1Name = st1Name;
+            modemST2Name = st2Name;
         }
 
         public boolean accept(File file, String fileName) {
@@ -60,8 +60,8 @@ public class ModemSwitcher {
         final boolean modemStatusSuccessful;
 
         ModemStatus(boolean statusSuccess, String modem) {
-            this.modemStatusSuccessful = statusSuccess;
-            this.currentModem = modem;
+            modemStatusSuccessful = statusSuccess;
+            currentModem = modem;
         }
     }
 

@@ -28,12 +28,12 @@ public class DSDataSubContentJob extends JobService {
         private final Context mContext;
 
         public ConfigurationTask(Context context) {
-            this.mContext = context;
+            mContext = context;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            CustomizationSelectorService.evaluateCarrierBundle(this.mContext);
+            CustomizationSelectorService.evaluateCarrierBundle(mContext);
             return null;
         }
     }
@@ -51,21 +51,21 @@ public class DSDataSubContentJob extends JobService {
 
     public boolean onStartJob(final JobParameters jobParameters) {
         CSLog.d(TAG, "onStartJob");
-        this.mConfigurationTask = new ConfigurationTask(this) {
+        mConfigurationTask = new ConfigurationTask(this) {
             @Override
             protected void onPostExecute(Void unused) {
                 DSDataSubContentJob.this.jobFinished(jobParameters, false);
                 DSDataSubContentJob.scheduleJob(DSDataSubContentJob.this);
             }
         };
-        this.mConfigurationTask.execute();
+        mConfigurationTask.execute();
         return true;
     }
 
     public boolean onStopJob(JobParameters jobParameters) {
         CSLog.d(TAG, "onStopJob");
-        if (this.mConfigurationTask != null) {
-            this.mConfigurationTask.cancel(true);
+        if (mConfigurationTask != null) {
+            mConfigurationTask.cancel(true);
         }
         return true;
     }
