@@ -47,15 +47,15 @@ public class CSLog {
         String subscriberID = "", simOP = "", simOpName = "";
 
         int defaultSubscriptionId = SubscriptionManager.getDefaultSubscriptionId();
-        TelephonyManager telephonyManager = context.getSystemService(TelephonyManager.class);
+        TelephonyManager tm = context.getSystemService(TelephonyManager.class);
 
         if (defaultSubscriptionId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-            simOP = telephonyManager.getSimOperator(defaultSubscriptionId);
+            simOP = tm.getSimOperator(defaultSubscriptionId);
             if (simOP == null) {
                 simOP = "";
             }
-            subscriberID = telephonyManager.getSubscriberId(defaultSubscriptionId);
-            String simOperatorName = telephonyManager.getSimOperatorName(defaultSubscriptionId);
+            subscriberID = tm.getSubscriberId(defaultSubscriptionId);
+            String simOperatorName = tm.getSimOperatorName(defaultSubscriptionId);
             simOpName = simOperatorName != null ? simOperatorName.replaceAll("[\n\r]", "").trim() : "";
         }
         d(tag, "SimValues: MCC-MNC=" + simOP + ", SP-name=" + simOpName + ", IMSI=" + subscriberID);
