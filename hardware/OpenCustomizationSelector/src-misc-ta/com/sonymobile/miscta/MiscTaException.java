@@ -15,19 +15,19 @@ public final class MiscTaException extends RuntimeException {
     }
 
     public MiscTaException(miscta_status_t status) {
-        this.mStatus = status;
+        mStatus = status;
     }
 
     public MiscTaException(int status) {
         try {
-            this.mStatus = miscta_status_t.values()[status];
+            mStatus = miscta_status_t.values()[status];
         } catch (ArrayIndexOutOfBoundsException e) {
-            this.mStatus = miscta_status_t.MT_ERROR;
+            mStatus = miscta_status_t.MT_ERROR;
         }
     }
 
     public miscta_status_t getStatus() {
-        return this.mStatus;
+        return mStatus;
     }
 
     public String getMessage() {

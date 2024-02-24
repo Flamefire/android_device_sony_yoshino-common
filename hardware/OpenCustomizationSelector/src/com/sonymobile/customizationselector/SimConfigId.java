@@ -21,7 +21,7 @@ public class SimConfigId {
     private final Context mContext;
 
     public SimConfigId(Context context) {
-        this.mContext = context;
+        mContext = context;
     }
 
     public static HashMap<String, String> extractSimInfo(TelephonyManager tm, int subID) {

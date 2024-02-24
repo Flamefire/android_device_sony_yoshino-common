@@ -15,10 +15,10 @@ public class SubIdObserver {
     }
 
     private final Context mContext;
+    private boolean mRegistered = false;
+    private Handler mHandler;
+    private Listener mListener;
 
-    private boolean registered = false;
-
-    private Handler handler;
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -26,29 +26,27 @@ public class SubIdObserver {
                 synchronized (new Object()) {
                     int subId = getSubID();
                     if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-                        listener.onConnected(subId);
+                        mListener.onConnected(subId);
                         unregister();
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if (handler != null) {
-                    handler.postDelayed(this, 2000);
+                if (mHandler != null) {
+                    mHandler.postDelayed(this, 2000);
                 }
             }
         }
     };
 
-    private Listener listener;
-
     public void register(Listener listener) {
-        if (!registered) {
-            this.listener = listener;
-            handler = new Handler(mContext.getMainLooper());
+        if (!mRegistered) {
+            mListener = listener;
+            mHandler = new Handler(mContext.getMainLooper());
 
-            handler.post(runnable);
-            registered = true;
+            mHandler.post(runnable);
+            mRegistered = true;
 
             CSLog.d(TAG, "Registered");
         }
@@ -65,15 +63,15 @@ public class SubIdObserver {
     }
 
     private void unregister() {
-        listener = null;
-        handler.removeCallbacks(runnable);
-        handler = null;
+        mListener = null;
+        mHandler.removeCallbacks(runnable);
+        mHandler = null;
 
-        registered = false;
+        mRegistered = false;
         CSLog.d(TAG, "Unregistered");
     }
 
     public SubIdObserver(Context context) {
-        this.mContext = context;
+        mContext = context;
     }
 }

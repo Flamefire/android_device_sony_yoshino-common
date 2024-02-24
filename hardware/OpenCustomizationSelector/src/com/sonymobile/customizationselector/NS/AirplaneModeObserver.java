@@ -17,28 +17,28 @@ public class AirplaneModeObserver extends ContentObserver {
     }
 
     private final Context mContext;
-    private boolean registered = false;
-    private Listener listener = null;
+    private boolean mRegistered = false;
+    private Listener mListener = null;
 
     public AirplaneModeObserver(Context context, Handler handler) {
         super(handler);
-        this.mContext = context;
+        mContext = context;
     }
 
     public void register(Listener listener) {
-        if (!registered) {
-            this.listener = listener;
+        if (!mRegistered) {
+            mListener = listener;
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON),
                     false, this, UserHandle.USER_CURRENT);
-            registered = true;
+            mRegistered = true;
             CSLog.d(TAG, "Registered");
         }
     }
 
     public void unregister() {
-        if (registered) {
+        if (mRegistered) {
             mContext.getContentResolver().unregisterContentObserver(this);
-            registered = false;
+            mRegistered = false;
             CSLog.d(TAG, "Unregistered");
         }
     }
@@ -46,7 +46,7 @@ public class AirplaneModeObserver extends ContentObserver {
     @Override
     public void onChange(boolean b, Uri uri) {
         if (!b) {
-            listener.onChange(uri);
+            mListener.onChange(uri);
         }
     }
 }

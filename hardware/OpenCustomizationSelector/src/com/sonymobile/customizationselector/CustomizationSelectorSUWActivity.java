@@ -60,14 +60,14 @@ public class CustomizationSelectorSUWActivity extends Activity {
 
     private static final class StateHandler extends Handler {
         private static StateHandler sHandler;
-        private WeakReference<CustomizationSelectorSUWActivity> weakActivity;
+        private WeakReference<CustomizationSelectorSUWActivity> mWeakActivity;
 
         private StateHandler(CustomizationSelectorSUWActivity customizationSelectorSUWActivity) {
-            this.weakActivity = new WeakReference(customizationSelectorSUWActivity);
+            mWeakActivity = new WeakReference(customizationSelectorSUWActivity);
         }
 
         public static StateHandler getStateHandler(CustomizationSelectorSUWActivity customizationSelectorSUWActivity) {
-            if (sHandler == null || sHandler.weakActivity.get() == null) {
+            if (sHandler == null || sHandler.mWeakActivity.get() == null) {
                 sHandler = new StateHandler(customizationSelectorSUWActivity);
             }
             return sHandler;
@@ -76,7 +76,7 @@ public class CustomizationSelectorSUWActivity extends Activity {
         @Override
         public void handleMessage(Message message) {
             removeCallbacksAndMessages(null);
-            CustomizationSelectorSUWActivity customizationSelectorSUWActivity = this.weakActivity.get();
+            CustomizationSelectorSUWActivity customizationSelectorSUWActivity = mWeakActivity.get();
             if (customizationSelectorSUWActivity != null) {
                 switch (message.what) {
                     case MSG_CONTINUE:
