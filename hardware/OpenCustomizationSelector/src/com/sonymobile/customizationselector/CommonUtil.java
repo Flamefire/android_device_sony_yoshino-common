@@ -3,6 +3,7 @@ package com.sonymobile.customizationselector;
 import android.content.Context;
 import android.os.PersistableBundle;
 import android.os.storage.StorageManager;
+import android.provider.Settings;
 import android.telephony.CellSignalStrength;
 import android.telephony.SignalStrength;
 import android.telephony.SubscriptionInfo;
@@ -69,6 +70,25 @@ public class CommonUtil {
 
     public static boolean isDefaultDataSlot(Context context, int subID) {
         return getDefaultSubId(context) == subID;
+    }
+
+    public static int getSimSlotIndex(Context context, int defaultIdx){
+        if (CommonUtil.isDualSim(context))
+            return Settings.System.getInt(context.getContentResolver(), "ns_slot", defaultIdx);
+        else
+            return 0;
+    }
+
+    public static int getSimSlotIndex(Context context){
+        return getSimSlotIndex(context, 0);
+    }
+
+    /**
+     * Get the subscription IDs based on phone count and sim status.
+     */
+    public static int getSubID(Context context) {
+        int[] subs = SubscriptionManager.getSubId(getSimSlotIndex(context));
+        return subs == null ? SubscriptionManager.INVALID_SUBSCRIPTION_ID : subs[0];
     }
 
     public static boolean isDirectBootEnabled() {
