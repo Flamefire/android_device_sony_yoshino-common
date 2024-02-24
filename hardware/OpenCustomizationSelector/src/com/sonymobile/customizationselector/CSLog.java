@@ -101,10 +101,8 @@ public class CSLog {
             }
             brw = new BufferedWriter(new FileWriter(logFile, logFile.exists()));
 
-            String line = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS", Locale.getDefault())
-                    .format(System.currentTimeMillis()) + " " + type + " " + tag + ": " + msg;
-
-            brw.append(line);
+            String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").format(System.currentTimeMillis());
+            brw.append(timeStamp + " " + type + " " + tag + ": " + msg);
             brw.newLine();
         } catch (Exception e) {
             e.printStackTrace();
