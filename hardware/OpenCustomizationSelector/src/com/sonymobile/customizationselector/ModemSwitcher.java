@@ -30,6 +30,8 @@ public class ModemSwitcher {
     public static final String MODEM_STATUS_FILE = "/cache/modem/modem_switcher_status";
     public static final String SINGLE_MODEM_FS = "single_filesystem";
 
+    public static final String CS_REAPPLY_MODEM = "cs_re_apply_modem";
+
     private static final int MAXIMUM_STATUS_FILE_LENGTH = 128;
     public static final int UA_MODEM_SWITCHER_STATUS_SUCCESS = 0;
 
@@ -255,7 +257,7 @@ public class ModemSwitcher {
     }
 
     public static void reApplyModem(Context ctx) {
-        if (Settings.System.getInt(ctx.getContentResolver(), "cs_re_apply_modem", 1) == 0) {
+        if (Settings.System.getInt(ctx.getContentResolver(), CS_REAPPLY_MODEM, 1) == 0) {
             CSLog.d(TAG, "reApplyModem: Preference false. Returning ...");
             return;
         }

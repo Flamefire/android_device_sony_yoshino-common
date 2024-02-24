@@ -11,6 +11,10 @@ public class PreferenceReceiver extends BroadcastReceiver {
     private static final String TAG = "PreferenceReceiver";
     private static final int ENABLED = 1;
     private static final int DISABLED = 0;
+    private static final int INVALID = -1;
+    private static final String PREF_EXTRA_KEY = "pref";
+    private static final int PREF_IMS = 0;
+    private static final int PREF_REAPPLY_MODEM = 1;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -19,14 +23,9 @@ public class PreferenceReceiver extends BroadcastReceiver {
             return;
         }
 
-        int pref = intent.getIntExtra("pref", -1);
-        if (pref == -1) {
-            CSLog.d(TAG, "Invalid pref, returning ...");
-            return;
-        }
-
-        if (pref == 0) {
-            int change = intent.getIntExtra("cs_ims", DISABLED);
+        int pref = intent.getIntExtra(PREF_EXTRA_KEY, INVALID);
+        if (pref == PREF_IMS) {
+            int change = intent.getIntExtra(EventReceiver.CS_IMS, DISABLED);
             CSLog.d(TAG, "change received: " + change);
             int subID = context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
                     .getInt("event_subID", SubscriptionManager.INVALID_SUBSCRIPTION_ID);
@@ -36,18 +35,18 @@ public class PreferenceReceiver extends BroadcastReceiver {
             }
 
             ImsSwitcher switcher = new ImsSwitcher(context);
-            if (change == ENABLED) {
+            if (change == ENABLED)
                 switcher.switchOnIMS(subID);
-            }
-            if (change == DISABLED) {
+            else if (change == DISABLED)
                 switcher.switchOffIMS();
-            }
-        }
-        if (pref == 1) {
-            int apply = intent.getIntExtra("cs_re_apply_modem", ENABLED);
-            if (apply == ENABLED) ModemSwitcher.reApplyModem(context);
-            if (apply == DISABLED) ModemSwitcher.revertReApplyModem(context);
-            (context.getSystemService(PowerManager.class)).reboot(context.getString(R.string.reboot_reason));
-        }
+        } else if (pref == PREF_REAPPLY_MODEM) {
+            int apply = intent.getIntExtra(ModemSwitcher.CS_REAPPLY_MODEM, INVALID);
+            if (apply == ENABLED)
+                ModemSwitcher.reApplyModem(context);
+            else if (apply == DISABLED)
+                ModemSwitcher.revertReApplyModem(context);
+            context.getSystemService(PowerManager.class).reboot(context.getString(R.string.reboot_reason));
+        } else
+            CSLog.d(TAG, "Invalid pref, returning ...");
     }
 }
