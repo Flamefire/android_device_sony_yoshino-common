@@ -12,6 +12,7 @@ public class XmlConstants {
     public static final String ICCID = "iccid";
     public static final String MCC = "mcc";
     public static final String MNC = "mnc";
+    public static final String SUBSCRIPTION = "subscription";
     public static final String NULL_VALUE = "null";
     public static final String SERVICE_PROVIDER_SIM_CONFIG = "service_provider_sim_config";
     public static final String SIM_CONFIG_ID = "sim_config_id";
