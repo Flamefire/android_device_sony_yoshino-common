@@ -10,8 +10,8 @@ import android.provider.Settings.Secure;
 
 public class CustomizationSelectorService extends IntentService {
 
-    private static final String TAG = CustomizationSelectorService.class.getSimpleName();
-    private static final String EVALUATE_ACTION = "evaluate_action";
+    private static final String TAG = "CustomizationSelectorService";
+    public static final String EVALUATE_ACTION = "evaluate_action";
 
     public CustomizationSelectorService() {
         super(CustomizationSelectorService.class.getName());

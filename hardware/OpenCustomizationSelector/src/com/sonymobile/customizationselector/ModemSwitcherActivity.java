@@ -19,7 +19,7 @@ import java.util.Locale;
 
 public class ModemSwitcherActivity extends Activity {
 
-    private static final String TAG = "ModemSwitcher_Debug";
+    private static final String TAG = "ModemSwitcherActivity";
 
     private static final String INITIAL_MODEM_PREF = "initialModem";
 

@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Configurator {
 
-    private static final String TAG = Configurator.class.getSimpleName();
+    private static final String TAG = "Configurator";
     public static final String PREF_PKG = "CS";
 
     public static final String KEY_CONFIG_ID = "config_id";

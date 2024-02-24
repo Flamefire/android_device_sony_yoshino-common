@@ -8,7 +8,6 @@ import com.sonymobile.customizationselector.CSLog;
 import com.sonymobile.customizationselector.CommonUtil;
 
 public class SubIdObserver {
-
     private static final String TAG = "SubIdObserver";
 
     interface Listener {

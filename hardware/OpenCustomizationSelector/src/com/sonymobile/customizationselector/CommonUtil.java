@@ -17,7 +17,7 @@ import static com.sonymobile.customizationselector.Parser.XmlConstants.*;
 
 public class CommonUtil {
 
-    private static final String TAG = CommonUtil.class.getSimpleName();
+    private static final String TAG = "CommonUtil";
     private static final int MIN_MCC_MNC_LENGTH = 5;
 
     public static PersistableBundle getCarrierBundle(Context context) {

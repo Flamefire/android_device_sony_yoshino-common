@@ -17,7 +17,7 @@ import static com.sonymobile.customizationselector.Parser.XmlConstants.*;
 
 public class ServiceProvidersParser {
 
-    private static final String TAG = ServiceProvidersParser.class.getSimpleName();
+    private static final String TAG = "ServiceProvidersParser";
     private static final int RESOURCE_XML = R.xml.service_providers;
 
     public static List<SimCombination> getServiceProviders(Context context) {

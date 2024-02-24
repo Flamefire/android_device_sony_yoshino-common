@@ -21,7 +21,7 @@ public class DSDataSubContentJob extends JobService {
 
     private static final JobInfo JOB_INFO;
     private static final Uri MULTI_SIM_DATA_URI = Global.getUriFor("multi_sim_data_call");
-    private static final String TAG = DSDataSubContentJob.class.getSimpleName();
+    private static final String TAG = "DSDataSubContentJob";
     private ConfigurationTask mConfigurationTask;
 
     private static class ConfigurationTask extends AsyncTask<Void, Context, Void> {

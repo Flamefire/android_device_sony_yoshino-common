@@ -15,7 +15,7 @@ import static com.sonymobile.customizationselector.Parser.XmlConstants.*;
 
 public class DynamicConfigParser {
 
-    private static final String TAG = DynamicConfigParser.class.getSimpleName();
+    private static final String TAG = "DynamicConfigParser";
 
     private static final int RESOURCE_XML = R.xml.configuration_selectors;
 

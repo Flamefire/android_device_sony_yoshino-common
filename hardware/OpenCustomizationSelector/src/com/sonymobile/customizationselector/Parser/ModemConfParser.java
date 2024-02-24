@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ModemConfParser {
 
-    private static final String TAG = ModemConfParser.class.getSimpleName();
+    private static final String TAG = "ModemConfParser";
 
     private static final String LEGACY_PATH = "/etc/customization/modem";
     private static final String MODEM_CONF = "/modem.conf";
