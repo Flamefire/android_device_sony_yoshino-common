@@ -45,8 +45,7 @@ public class EventReceiver extends BroadcastReceiver {
         int subID = getSubId(context, intent);
         if (subID != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
             CSLog.d(TAG, "Saving sub ID for later");
-            context.createDeviceProtectedStorageContext().getSharedPreferences(Configurator.PREF_PKG, Context.MODE_PRIVATE)
-                    .edit().putInt(SUBID_KEY, subID).apply();
+            Configurator.getPreferences(context).edit().putInt(SUBID_KEY, subID).apply();
         }
 
         if (Settings.System.getInt(context.getContentResolver(), CS_IMS, 1) == 0) {

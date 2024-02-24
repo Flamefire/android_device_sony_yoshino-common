@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class Configurator {
 
     private static final String TAG = "Configurator";
-    public static final String PREF_PKG = "CS";
+    private static final String PREF_PKG = "CS";
 
     public static final String KEY_CONFIG_ID = "config_id";
     public static final String KEY_MODEM = "modem";
@@ -55,17 +55,18 @@ public class Configurator {
         return !configKey.equals(createCurrentConfigurationKey());
     }
 
-    public void saveConfigurationKey() {
-        String createCurrentConfigurationKey = createCurrentConfigurationKey();
-        getPreferences().edit()
-                .putString(OLD_CONFIG_KEY, createCurrentConfigurationKey)
-                .apply();
+    public void saveConfigurationKey(String configKey) {
+        getPreferences().edit().putString(OLD_CONFIG_KEY, configKey).apply();
+    }
 
-        CSLog.d(TAG, "saveConfigKey - key saved: " + createCurrentConfigurationKey);
+    public void saveConfigurationKey() {
+        String newKey = createCurrentConfigurationKey();
+        saveConfigurationKey(newKey);
+        CSLog.d(TAG, "saveConfigKey - key saved: " + newKey);
     }
 
     public void clearConfigurationKey() {
-        getPreferences().edit().putString(OLD_CONFIG_KEY, "null").apply();
+        saveConfigurationKey("null");
     }
 
     private String createCurrentConfigurationKey() {
@@ -94,17 +95,21 @@ public class Configurator {
         return simSerialNumber != null ? simSerialNumber : "";
     }
 
-    public Context getTargetContext() {
+    private static Context getTargetContext(Context context) {
         if (CommonUtil.isDirectBootEnabled()) {
             CSLog.d(TAG, "Direct Boot is enabled. Use device encrypted storage.");
-            return mContext.createDeviceProtectedStorageContext();
+            return context.createDeviceProtectedStorageContext();
         }
         CSLog.d(TAG, "Direct Boot is disabled. Use credential encrypted storage.");
-        return mContext;
+        return context;
+    }
+
+    public static SharedPreferences getPreferences(Context context) {
+        return getTargetContext(context).getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE);
     }
 
     public SharedPreferences getPreferences() {
-        return getTargetContext().getSharedPreferences(PREF_PKG, Context.MODE_PRIVATE);
+        return getPreferences(mContext);
     }
 
     public boolean isNewConfigurationNeeded() {
