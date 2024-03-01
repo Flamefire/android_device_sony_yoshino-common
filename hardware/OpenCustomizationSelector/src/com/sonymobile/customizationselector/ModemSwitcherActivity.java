@@ -63,22 +63,15 @@ public class ModemSwitcherActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mModemSwitcher = new ModemSwitcher();
         try {
-            int i2;
             String currentModem = ModemSwitcher.getCurrentModemConfig().replace(ModemSwitcher.MODEM_FS_PATH, "");
             CSLog.d(TAG, "current modem" + currentModem);
 
-            String[] availableModemConfigurations = mModemSwitcher.getAvailableModemConfigurations();
             if (currentModem.equals(ModemSwitcher.SINGLE_MODEM_FS) || currentModem.equals("")) {
                 CSLog.d(TAG, "Single modem device");
-                i2 = 1;
-            } else {
-                saveInitialModem(currentModem);
-                i2 = 0;
-            }
-            if (i2 != 0) {
                 setContentView(R.layout.modem_handling_single);
                 return;
             }
+            saveInitialModem(currentModem);
             setContentView(R.layout.modem_handling);
 
             ((TextView) findViewById(R.id.initial_modem)).setText(mInitialModem);
@@ -89,7 +82,7 @@ public class ModemSwitcherActivity extends Activity {
             button.setClickable(true);
 
             ArrayList<String> modemList = new ArrayList<>();
-            for (String m : availableModemConfigurations) {
+            for (String m : mModemSwitcher.getAvailableModemConfigurations()) {
                 modemList.add(m.replace(ModemSwitcher.MODEM_FS_PATH, ""));
             }
 

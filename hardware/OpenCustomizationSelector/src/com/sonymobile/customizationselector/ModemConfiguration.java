@@ -22,16 +22,14 @@ public class ModemConfiguration {
     public String getModemConfiguration(String variant) {
         if (variant == null)
             variant = "";
+        String modemToFind = variant + MODEM_APPENDIX;
 
-        String defaultModem, modemConfig = "";
+        String modemConfig = "";
         String[] availableModemConfigurations = mModemSwitcher.getAvailableModemConfigurations();
 
-        String modemToFind = variant + MODEM_APPENDIX;
-        if (availableModemConfigurations != null && availableModemConfigurations.length > 0) {
-            defaultModem = availableModemConfigurations[0];
-
+        if (availableModemConfigurations.length > 0) {
             CSLog.d(TAG, "getModemConfiguration - Finding modem with suffix: " + modemToFind);
-            modemConfig = defaultModem;
+            modemConfig = availableModemConfigurations[0];
             for (String m : availableModemConfigurations) {
                 if (m.endsWith(modemToFind)) {
                     modemConfig = m;
