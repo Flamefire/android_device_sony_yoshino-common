@@ -151,27 +151,22 @@ public class ModemSwitcher {
 
     public String[] getAvailableModemConfigurations() {
         if (mCachedModemConfigurations == null) {
-            File file = new File(MODEM_FS_PATH);
-            if (!file.isDirectory()) {
+            File modemsDir = new File(MODEM_FS_PATH);
+            if (!modemsDir.isDirectory()) {
                 CSLog.e(TAG, "Could not open directory: " + MODEM_FS_PATH);
                 mCachedModemConfigurations = new String[]{SINGLE_MODEM_FS};
-            }
-
-            if (mCachedModemConfigurations == null) {
-                String[] strArr;
-                String[] list = file.list(new ModemFilter(lookupSymlinkTarget(RESET_MODEM_ST1), lookupSymlinkTarget(RESET_MODEM_ST2)));
-                if (list == null || list.length <= 0) {
-                    CSLog.e(TAG, "Could not get list of available modem filesystems");
-                    strArr = new String[]{SINGLE_MODEM_FS};
+            } else {
+                String[] modemFiles = modemsDir.list(new ModemFilter(lookupSymlinkTarget(RESET_MODEM_ST1), lookupSymlinkTarget(RESET_MODEM_ST2)));
+                if (modemFiles != null && modemFiles.length > 0) {
+                    Arrays.sort(modemFiles, Comparator.comparingInt(String::length));
+                    for (int i = 0; i < modemFiles.length; i++)
+                        modemFiles[i] = MODEM_FS_PATH + modemFiles[i];
+                    mCachedModemConfigurations = modemFiles;
                 } else {
-                    for (int i = 0; i < list.length; i++) {
-                        list[i] = MODEM_FS_PATH + list[i];
-                    }
-                    strArr = list;
+                    CSLog.e(TAG, "Could not get list of available modem filesystems");
+                    mCachedModemConfigurations = new String[]{SINGLE_MODEM_FS};
                 }
-                mCachedModemConfigurations = strArr;
             }
-            Arrays.sort(mCachedModemConfigurations, Comparator.comparingInt(String::length));
         }
         return Arrays.copyOf(mCachedModemConfigurations, mCachedModemConfigurations.length);
     }
