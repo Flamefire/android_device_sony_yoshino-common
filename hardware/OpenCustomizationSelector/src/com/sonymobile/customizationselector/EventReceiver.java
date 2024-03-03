@@ -110,23 +110,9 @@ public class EventReceiver extends BroadcastReceiver {
 
     private String[] readModemFile() {
         String[] stat = {"N/A", "N/A"};
-        try {
-            File file = new File(ModemSwitcher.MODEM_STATUS_FILE);
-            if (file.exists()) {
-                String line, data = "";
-
-                BufferedReader br = new BufferedReader(new FileReader(file));
-                while ((line = br.readLine()) != null)
-                    data += line;
-                data = data.replace("\n", "").replace("\r", "")
-                        .replace("{", "").replace("}", "").replace("\"", "").trim();
-
-                return data.equals("") ? stat : new String[]{data.split(",")[0], data.split(",")[1]};
-            } else
-                return stat;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return stat;
-        }
+        ModemSwitcher.ModemStatusContent data = ModemSwitcher.readModemStatusFile();
+        if(data != null)
+            stat = new String[]{data.success, data.currentModem};
+        return stat;
     }
 }

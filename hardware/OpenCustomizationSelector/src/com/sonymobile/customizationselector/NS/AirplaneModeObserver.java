@@ -41,7 +41,7 @@ public class AirplaneModeObserver extends ContentObserver {
         CSLog.d(TAG, "Unregistered");
     }
 
-    private static Uri getUri(){
+    private static Uri getUri() {
         return Settings.System.getUriFor(Settings.Global.AIRPLANE_MODE_ON);
     }
 

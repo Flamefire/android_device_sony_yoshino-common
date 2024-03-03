@@ -171,7 +171,7 @@ public class CustomizationSelectorSUWActivity extends Activity {
         super.onResume();
         if (isSimWorking())
             startTimeout();
-        else 
+        else
             continueSetupWizard();
     }
 }

@@ -27,23 +27,17 @@ public class StatusActivity extends Activity {
 
     private String readFile(File file) {
         StringBuilder data = new StringBuilder();
-
-        BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader(file));
-            String line;
-
-            while ((line = br.readLine()) != null)
-                data.append(line).append("\n");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            try {
+                String line;
+                while ((line = reader.readLine()) != null)
+                    data.append(line).append("\n");
+            } finally {
+                reader.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (br != null)
-                    br.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
         return data.toString();
     }
