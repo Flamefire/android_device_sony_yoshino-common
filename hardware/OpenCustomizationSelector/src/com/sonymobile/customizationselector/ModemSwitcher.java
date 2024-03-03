@@ -54,12 +54,22 @@ public class ModemSwitcher {
         }
     }
 
-    private static class ModemStatus {
+    public static class ModemStatusContent {
+        final String success;
         final String currentModem;
-        final boolean modemStatusSuccessful;
+
+        ModemStatusContent(String statusSuccess, String modem) {
+            success = statusSuccess;
+            currentModem = modem;
+        }
+    }
+
+    public static class ModemStatus {
+        final boolean success;
+        final String currentModem;
 
         ModemStatus(boolean statusSuccess, String modem) {
-            modemStatusSuccessful = statusSuccess;
+            success = statusSuccess;
             currentModem = modem;
         }
     }
@@ -76,76 +86,56 @@ public class ModemSwitcher {
         return resolvedName;
     }
 
-    private static ModemStatus readModemAndStatus() {
+    private static String readLineFromFile(File file) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+            try {
+                return reader.readLine();
+            } finally {
+                reader.close();
+            }
+        } catch (IOException e) {
+            CSLog.e(TAG, "Failed to read from " + file + ": " + e);
+        }
+        return null;
+    }
+
+    /** Read the modem status file and returns its content if it is valid, else null */
+    public static ModemStatusContent readModemStatusFile() {
         File statusFile = new File(MODEM_STATUS_FILE);
-        String currentModem = DEFAULT_MODEM;
 
         if (!statusFile.isFile()) {
             CSLog.e(TAG, "Status file does not exists or is not a file.");
-            return new ModemStatus(false, currentModem);
-
+            return null;
         } else if (statusFile.length() > MAXIMUM_STATUS_FILE_LENGTH) {
             CSLog.e(TAG, "Status file is too large: " + statusFile.length() + ", more than limit: " + MAXIMUM_STATUS_FILE_LENGTH);
-            return new ModemStatus(false, currentModem);
-
-        } else {
-            BufferedReader in = null;
-            try {
-                in = new BufferedReader(new InputStreamReader(new FileInputStream(statusFile), StandardCharsets.UTF_8));
-
-                String line = in.readLine();
-                if (line == null) {
-                    CSLog.e(TAG, "Line is null");
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return new ModemStatus(false, currentModem);
-                }
-
-                String[] values = line.split(",");
-                CSLog.d(TAG, "Read line: " + line);
-
-                if (values.length != 2) {
-                    CSLog.e(TAG, "Format error status file, nbr of fields found:" + values.length);
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return new ModemStatus(false, currentModem);
-                }
-
-                int tmpStatus = Integer.parseInt(values[0]);
-                if (tmpStatus != UA_MODEM_SWITCHER_STATUS_SUCCESS) {
-                    CSLog.d(TAG, "Unsuccessful status code found: " + tmpStatus);
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return new ModemStatus(false, currentModem);
-                }
-                currentModem = values[1];
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return new ModemStatus(true, currentModem);
-            } catch (Exception e) {
-                CSLog.e(TAG, "Failed to read FOTA STATUS() " + e);
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-                return null;
-            }
+            return null;
         }
+        String line = readLineFromFile(statusFile);
+        if (line == null) {
+            CSLog.e(TAG, "Line is null");
+            return null;
+        }
+        CSLog.d(TAG, "Read line: " + line);
+        String[] values = line.split(",");
+
+        if (values.length != 2) {
+            CSLog.e(TAG, "Format error status file, nbr of fields found:" + values.length);
+            return null;
+        }
+        return new ModemStatusContent(values[0], values[1]);
+    }
+
+    /** Read and parse the modem status file. Return null if invalid or error */
+    public static ModemStatus readModemAndStatus() {
+        try {
+            ModemStatusContent content = readModemStatusFile();
+            if (content != null)
+                return new ModemStatus(Integer.parseInt(content.success) == UA_MODEM_SWITCHER_STATUS_SUCCESS, content.currentModem);
+        } catch (Exception e) {
+            CSLog.e(TAG, "Failed to read FOTA STATUS() " + e);
+        }
+        return null;
     }
 
     public String[] getAvailableModemConfigurations() {
@@ -171,34 +161,31 @@ public class ModemSwitcher {
     }
 
     public static String getCurrentModemConfig() throws IOException {
-        ModemStatus readModemAndStatus = readModemAndStatus();
+        ModemStatus modemStatus = readModemAndStatus();
+        if (modemStatus == null || !modemStatus.success)
+            throw new IOException("Current modem configuration could not be read due to error");
 
-        if (readModemAndStatus != null && readModemAndStatus.modemStatusSuccessful) {
-            String lookupSymlinkTarget = lookupSymlinkTarget(readModemAndStatus.currentModem);
+        String currentModem = lookupSymlinkTarget(modemStatus.currentModem);
 
-            if (new File(MODEM_FS_PATH, lookupSymlinkTarget).exists()) {
-                if (DEFAULT_MODEM.equals(lookupSymlinkTarget)) {
-                    String msg = "Default modem is a file node that does not point to valid modem fs";
-                    CSLog.e(TAG, msg);
-                    throw new IOException(msg);
-                }
-                return MODEM_FS_PATH + lookupSymlinkTarget;
-
-            } else if (DEFAULT_MODEM.equals(lookupSymlinkTarget)) {
-                CSLog.d(TAG, "No modem filesystems exists, return SINGLE_MODEM_FS");
-                return SINGLE_MODEM_FS;
-
-            } else {
-                CSLog.w(TAG, "Current modem configuration is set to an invalid value: " + lookupSymlinkTarget + ". Returning");
-                return "";
+        if (new File(MODEM_FS_PATH, currentModem).exists()) {
+            if (DEFAULT_MODEM.equals(currentModem)) {
+                String msg = "Default modem is a file node that does not point to valid modem fs";
+                CSLog.e(TAG, msg);
+                throw new IOException(msg);
             }
+            return MODEM_FS_PATH + currentModem;
+        } else if (DEFAULT_MODEM.equals(currentModem)) {
+            CSLog.d(TAG, "No modem filesystems exists, return SINGLE_MODEM_FS");
+            return SINGLE_MODEM_FS;
+        } else {
+            CSLog.w(TAG, "Current modem configuration is set to an invalid value: " + currentModem + ". Returning");
+            return "";
         }
-        throw new IOException("Current modem configuration could not be read due to error ");
     }
 
     public boolean isModemStatusSuccess() {
         ModemStatus status = readModemAndStatus();
-        return status != null && status.modemStatusSuccessful;
+        return status != null && status.success;
     }
 
     public boolean setModemConfiguration(String modemConfig) {
@@ -260,7 +247,7 @@ public class ModemSwitcher {
         }
         try {
             String modem = getCurrentModemConfig();
-            if (modem == null || modem.isEmpty()) {
+            if (modem.isEmpty()) {
                 CSLog.e(TAG, "reApplyModem - Modem is EMPTY !");
                 return;
             }
@@ -290,7 +277,7 @@ public class ModemSwitcher {
     public static void revertReApplyModem() {
         try {
             String modem = getCurrentModemConfig();
-            if (modem == null || modem.isEmpty()) {
+            if (modem.isEmpty()) {
                 CSLog.e(TAG, "revertReApplyModem - Modem is EMPTY !");
                 return;
             }
