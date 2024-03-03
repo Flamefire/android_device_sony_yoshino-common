@@ -36,6 +36,7 @@ public class ImsSwitcher {
         CSLog.d(TAG, "switching IMS OFF");
         try {
             String currentModem = ModemSwitcher.getCurrentModemConfig().replace(ModemSwitcher.MODEM_FS_PATH, "");
+            CSLog.d(TAG, "Current modem: " + currentModem);
             if (CommonUtil.isModemDefault(currentModem)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage("Your modem is already default, no reboot required");
@@ -47,27 +48,18 @@ public class ImsSwitcher {
             } else {
                 String[] defaultModems = CommonUtil.getDefaultModems();
                 String build = SystemProperties.get("ro.build.flavor", "none");
-                if (build.contains("maple_dsds")) {
+                if (build.contains("maple_dsds"))
                     applyModem(defaultModems[4]);
-                    return;
-                }
-                if (build.contains("maple")) {
+                else if (build.contains("maple"))
                     applyModem(defaultModems[3]);
-                    return;
-                }
-                if (build.contains("poplar_dsds")) {
+                else if (build.contains("poplar_dsds"))
                     applyModem(defaultModems[2]);
-                    return;
-                }
-                if (build.contains("poplar") || build.contains("poplar_canada")) {
+                else if (build.contains("poplar"))
                     applyModem(defaultModems[1]);
-                    return;
-                }
-                if (build.contains("lilac")) {
+                else if (build.contains("lilac"))
                     applyModem(defaultModems[0]);
-                    return;
-                }
-                CSLog.e(TAG, "Unable to find default modem for build: " + build);
+                else
+                    CSLog.e(TAG, "Unable to find default modem for build: " + build);
             }
         } catch (IOException e) {
             CSLog.e(TAG, "ERROR: ", e);
