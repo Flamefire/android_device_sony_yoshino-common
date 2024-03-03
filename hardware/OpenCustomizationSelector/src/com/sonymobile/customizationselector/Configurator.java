@@ -8,12 +8,10 @@ import android.provider.Settings;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import com.sonymobile.miscta.MiscTA;
 import com.sonymobile.miscta.MiscTaException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 public class Configurator {
 
@@ -46,7 +44,7 @@ public class Configurator {
 
     public static void clearMiscTaConfigId() {
         CSLog.d(TAG, "Clear MiscTa value for Config Id");
-        MiscTA.write(TA_AC_VERSION, "".getBytes(StandardCharsets.UTF_8));
+        MiscTA.write(TA_AC_VERSION, "");
     }
 
     private boolean anythingChangedSinceLastEvaluation() {
@@ -137,7 +135,7 @@ public class Configurator {
         if (anythingChangedSinceLastEvaluation()) {
             saveConfigurationKey();
             if (mConfigId != null)
-                MiscTA.write(TA_AC_VERSION, mConfigId.getBytes(StandardCharsets.UTF_8));
+                MiscTA.write(TA_AC_VERSION, mConfigId);
             if (!TextUtils.isEmpty(mModem))
                 new ModemConfiguration(getPreferences()).setConfiguration(mModem);
         }

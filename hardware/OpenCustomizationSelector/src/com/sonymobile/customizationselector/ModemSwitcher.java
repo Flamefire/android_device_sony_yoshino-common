@@ -3,7 +3,6 @@ package com.sonymobile.customizationselector;
 import android.content.Context;
 import android.os.Environment;
 import android.provider.Settings;
-import com.sonymobile.miscta.MiscTA;
 import com.sonymobile.miscta.MiscTaException;
 
 import java.io.*;
@@ -239,14 +238,14 @@ public class ModemSwitcher {
     }
 
     public static boolean writeModemToMiscTA(String modemFileName) {
-        byte[] bytes = modemFileName.getBytes(StandardCharsets.UTF_8);
-        byte[] bArr = new byte[(bytes.length + MODEM_MAGIC_COMMAND_LENGTH)];
-        bArr[0] = MODEM_MISC_TA_MAGIC1;
-        bArr[1] = MODEM_MISC_TA_MAGIC2;
-        bArr[2] = MODEM_COMMAND_CHANGE;
-        System.arraycopy(bytes, 0, bArr, MODEM_MAGIC_COMMAND_LENGTH, bytes.length);
+        byte[] bFileName = modemFileName.getBytes(StandardCharsets.UTF_8);
+        byte[] data = new byte[(bFileName.length + MODEM_MAGIC_COMMAND_LENGTH)];
+        data[0] = MODEM_MISC_TA_MAGIC1;
+        data[1] = MODEM_MISC_TA_MAGIC2;
+        data[2] = MODEM_COMMAND_CHANGE;
+        System.arraycopy(bFileName, 0, data, MODEM_MAGIC_COMMAND_LENGTH, bFileName.length);
         try {
-            MiscTA.write(MODEM_COMMAND_UNIT, bArr);
+            MiscTA.write(MODEM_COMMAND_UNIT, data);
             return true;
         } catch (MiscTaException e) {
             CSLog.e(TAG, "Unable to write to miscta:" + e);
@@ -276,7 +275,7 @@ public class ModemSwitcher {
                 CSLog.i(TAG, "reApplyModem - 2405 was re-written successfully");
 
                 try {
-                    MiscTA.write(TA_FOTA_INTERNAL, "temporary_modem".getBytes(StandardCharsets.UTF_8));
+                    MiscTA.write(TA_FOTA_INTERNAL, "temporary_modem");
                     CSLog.i(TAG, "reApplyModem - Modem Switcher 2404 cleared");
                 } catch (MiscTaException e) {
                     CSLog.e(TAG, "reApplyModem - There was an error clearing 2404: ", e);
@@ -298,7 +297,7 @@ public class ModemSwitcher {
             CSLog.d(TAG, "revertReApplyModem - current modem: " + modem);
 
             try {
-                MiscTA.write(TA_FOTA_INTERNAL, new File(modem).getName().getBytes(StandardCharsets.UTF_8));
+                MiscTA.write(TA_FOTA_INTERNAL, new File(modem).getName());
                 CSLog.i(TAG, "revertReApplyModem - Modem Switcher 2404 was written with: " + modem.replace(MODEM_FS_PATH, ""));
             } catch (MiscTaException e) {
                 CSLog.e(TAG, "revertReApplyModem - There was an error writing 2404: ", e);
