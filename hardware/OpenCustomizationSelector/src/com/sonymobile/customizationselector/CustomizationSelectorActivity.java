@@ -72,16 +72,15 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
             setFinishOnTouchOutside(false);
             setupUserPresent();
             startDialog();
-            return;
+        } else {
+            disableActivity();
+            Intent intent = new Intent()
+                .setAction(Intent.ACTION_MAIN)
+                .addCategory(Intent.CATEGORY_HOME)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         }
-
-        disableActivity();
-        Intent intent = new Intent()
-            .setAction(Intent.ACTION_MAIN)
-            .addCategory(Intent.CATEGORY_HOME)
-            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
     @Override
