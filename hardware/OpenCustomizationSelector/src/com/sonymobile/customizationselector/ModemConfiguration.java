@@ -65,7 +65,10 @@ public class ModemConfiguration {
             return false;
 
         String savedConfig = mPreference.getString(SAVED_MODEM_CONFIG, "");
-        if (mModemSwitcher.isModemStatusSuccess() || !savedConfig.equals(config)) {
+        if (!mModemSwitcher.isModemStatusSuccess() && savedConfig.equals(config)) {
+            CSLog.e(TAG, "Modem id: " + config + " has been unsuccessfully tried");
+            return false;
+        } else {
             mPreference.edit().putString(SAVED_MODEM_CONFIG, config).apply();
             CSLog.d(TAG, "Updating the modem configuration with " + config);
 
@@ -76,7 +79,5 @@ public class ModemConfiguration {
             CSLog.d(TAG, "Unable to set modem configuration");
             return false;
         }
-        CSLog.e(TAG, "Modem id: " + config + " has been unsuccessfully tried");
-        return false;
     }
 }

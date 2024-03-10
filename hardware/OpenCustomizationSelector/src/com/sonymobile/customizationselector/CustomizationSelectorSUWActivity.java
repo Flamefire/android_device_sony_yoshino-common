@@ -76,19 +76,19 @@ public class CustomizationSelectorSUWActivity extends Activity {
         public void handleMessage(Message message) {
             removeCallbacksAndMessages(null);
             CustomizationSelectorSUWActivity customizationSelectorSUWActivity = mWeakActivity.get();
-            if (customizationSelectorSUWActivity != null) {
-                switch (message.what) {
-                    case MSG_CONTINUE:
-                        customizationSelectorSUWActivity.continueSetupWizard();
-                        return;
-                    case MSG_REBOOT:
-                        CSLog.d(CustomizationSelectorSUWActivity.TAG, "Configuration changed - rebooting device...");
-                        Log.i(customizationSelectorSUWActivity.getString(R.string.app_name), customizationSelectorSUWActivity.getString(R.string.customization_restart_desc_txt));
-                        ((PowerManager) customizationSelectorSUWActivity.getSystemService("power")).reboot(customizationSelectorSUWActivity.getApplicationContext().getString(R.string.reboot_reason));
-                        return;
-                    default:
-                        return;
-                }
+            if (customizationSelectorSUWActivity == null)
+                return;
+            switch (message.what) {
+                case MSG_CONTINUE:
+                    customizationSelectorSUWActivity.continueSetupWizard();
+                    return;
+                case MSG_REBOOT:
+                    CSLog.d(CustomizationSelectorSUWActivity.TAG, "Configuration changed - rebooting device...");
+                    Log.i(customizationSelectorSUWActivity.getString(R.string.app_name), customizationSelectorSUWActivity.getString(R.string.customization_restart_desc_txt));
+                    ((PowerManager) customizationSelectorSUWActivity.getSystemService("power")).reboot(customizationSelectorSUWActivity.getApplicationContext().getString(R.string.reboot_reason));
+                    return;
+                default:
+                    return;
             }
         }
     }
