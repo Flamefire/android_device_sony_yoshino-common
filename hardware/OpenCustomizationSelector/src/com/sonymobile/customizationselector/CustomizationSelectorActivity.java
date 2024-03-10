@@ -49,7 +49,7 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
 
     public void disableUI() {
         getWindow().addFlags(FLAG_DISMISS_KEYGUARD);
-        (getSystemService(StatusBarManager.class)).disable(StatusBarManager.DISABLE_MASK);
+        getSystemService(StatusBarManager.class).disable(StatusBarManager.DISABLE_MASK);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
         mConfigurator.set();
         mConfigurator.saveConfigurationKey();
         Log.i(getString(R.string.app_name), getString(R.string.customization_restart_desc_txt));
-        (getSystemService(PowerManager.class)).reboot(getString(R.string.reboot_reason));
+        getSystemService(PowerManager.class).reboot(getString(R.string.reboot_reason));
     }
 
     @Override
