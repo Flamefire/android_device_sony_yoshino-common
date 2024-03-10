@@ -35,7 +35,7 @@ public class Configurator {
 
     private final PersistableBundle mBundle;
     private final Context mContext;
-    private String mConfigId = "", mModem = "";
+    private String mConfigId = null, mModem = "";
 
     public Configurator(Context context, PersistableBundle bundle) {
         mContext = context;
