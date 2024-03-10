@@ -57,7 +57,6 @@ public class CustomizationSelectorActivity extends Activity implements OnClickLi
         CSLog.d(TAG, "onClick - Reboot");
         disableActivity();
         mConfigurator.set();
-        mConfigurator.saveConfigurationKey();
         Log.i(getString(R.string.app_name), getString(R.string.customization_restart_desc_txt));
         getSystemService(PowerManager.class).reboot(getString(R.string.reboot_reason));
     }
