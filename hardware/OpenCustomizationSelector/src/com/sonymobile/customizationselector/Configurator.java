@@ -48,9 +48,15 @@ public class Configurator {
     }
 
     private boolean anythingChangedSinceLastEvaluation() {
-        String configKey = getPreferences().getString(OLD_CONFIG_KEY, "");
-        CSLog.d(TAG, "OldConfigKey: " + configKey);
-        return !configKey.equals(createCurrentConfigurationKey());
+        String oldKey = getPreferences().getString(OLD_CONFIG_KEY, "");
+        String key = createCurrentConfigurationKey();
+        if (key.equals(oldKey)) {
+            CSLog.d(TAG, "Unchanged key=" + key);
+            return false;
+        } else {
+            CSLog.d(TAG, "Key changed: " + key + "!=" + oldKey);
+            return true;
+        }
     }
 
     public void saveConfigurationKey(String configKey) {
@@ -71,13 +77,15 @@ public class Configurator {
         String status = SystemProperties.get(PROP_CUST, "") + SystemProperties.get(PROP_CUST_REV, "") +
                 SystemProperties.get(PROP_SW, "") + SystemProperties.get(PROP_SW_REV, "") +
                 SystemProperties.get(PROP_CS_VERSION, "") + getIccid();
-        CSLog.d(TAG, "CurrentConfKey: " + status);
         return status;
     }
 
     private String evaluateCarrierConfigId(String ID) {
-        CSLog.d(TAG, "config_id = " + ID);
-        return (ID == null || ID.equals(SystemProperties.get(PROP_TA_AC_VERSION, null))) ? null : ID;
+        String taProp = SystemProperties.get(PROP_TA_AC_VERSION, null);
+        String taValue = MiscTA.readString(TA_AC_VERSION);
+        CSLog.d(TAG, "evaluateCarrierConfigId: config_id=" + ID + " property=" + taProp + " TA-value=" + taValue);
+
+        return (ID == null || ID.equals(taProp)) ? null : ID;
     }
 
     private String evaluateModem(String modem) {
