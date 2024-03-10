@@ -127,10 +127,10 @@ public class CustomizationSelectorSUWActivity extends Activity {
         if (configurator.isNewConfigurationNeeded()) {
             configurator.set();
             msg = MSG_REBOOT;
-        } else
+        } else {
+            configurator.saveConfigurationKey();
             msg = MSG_CONTINUE;
-
-        configurator.saveConfigurationKey();
+        }
         CSLog.d(TAG, "handleConfiguration - reboot? " + (msg == MSG_REBOOT));
         StateHandler.getStateHandler(this).sendEmptyMessage(msg);
     }
