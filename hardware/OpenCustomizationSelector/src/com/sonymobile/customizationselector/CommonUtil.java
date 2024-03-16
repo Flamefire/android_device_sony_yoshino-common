@@ -41,6 +41,10 @@ public class CommonUtil {
         if (configId == null || DEFAULT_CONFIG.equalsIgnoreCase(configId))
             configId = "";
         String modem = ModemConfParser.parseModemConf(configId);
+        if (TextUtils.isEmpty(modem) && isIMSEnabledBySetting(context)) {
+            CSLog.i(TAG, "No specific IMS modem found, using a fallback");
+            modem = "ir51_ir92_ims";
+        }
         CSLog.i(TAG, String.format("Returning bundle with sim id %s, modem: %s, config id: %s", simId, modem, configId));
 
         PersistableBundle bundle = new PersistableBundle(3);
