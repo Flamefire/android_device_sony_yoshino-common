@@ -25,6 +25,12 @@ public class CommonUtil {
     private static final String TAG = "CommonUtil";
     private static final int MIN_MCC_MNC_LENGTH = 5;
 
+    public static final String CS_IMS = "cs_ims";
+
+    public static boolean isIMSEnabledBySetting(Context context) {
+        return Settings.System.getInt(context.getContentResolver(), CS_IMS, 1) == 1;
+    }
+
     public static PersistableBundle getCarrierBundle(Context context) {
         String simId = new SimConfigId(context).getId();
 

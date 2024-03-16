@@ -20,7 +20,6 @@ import java.io.FileReader;
 public class EventReceiver extends BroadcastReceiver {
     private static final String TAG = "EventReceiver";
 
-    public static final String CS_IMS = "cs_ims";
     public static final String CS_NOTIFICATION = "cs_notification";
     public static final String SUBID_KEY = "event_subID";
 
@@ -48,7 +47,7 @@ public class EventReceiver extends BroadcastReceiver {
             Configurator.getPreferences(context).edit().putInt(SUBID_KEY, subID).apply();
         }
 
-        if (Settings.System.getInt(context.getContentResolver(), CS_IMS, 1) == 0) {
+        if (!CommonUtil.isIMSEnabledBySetting(context)) {
             CSLog.d(TAG, "IMS disabled, not parsing");
             if (!CommonUtil.isModemDefault(readModemFile()[1])) {
                 CSLog.d(TAG, "Modem not default but IMS turned off as per settings.");

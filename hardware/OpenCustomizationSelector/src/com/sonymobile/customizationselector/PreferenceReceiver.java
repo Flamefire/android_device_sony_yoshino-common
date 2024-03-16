@@ -25,7 +25,7 @@ public class PreferenceReceiver extends BroadcastReceiver {
 
         int pref = intent.getIntExtra(PREF_EXTRA_KEY, INVALID);
         if (pref == PREF_IMS) {
-            int change = intent.getIntExtra(EventReceiver.CS_IMS, INVALID);
+            int change = intent.getIntExtra(CommonUtil.CS_IMS, INVALID);
             CSLog.d(TAG, "change received: " + change);
             int subID = Configurator.getPreferences(context).getInt(EventReceiver.SUBID_KEY, SubscriptionManager.INVALID_SUBSCRIPTION_ID);
             if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
