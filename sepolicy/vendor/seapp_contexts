@@ -3,3 +3,6 @@ user=_app seinfo=platform name=com.sonyericsson.android.camera domain=sonycamera
 user=_app seinfo=platform name=com.sonymobile.addoncamera.portraitselfie domain=sonycamera_app type=app_data_file
 user=_app seinfo=platform name=com.sonyericsson.android.addoncamera.artfilter domain=sonycamera_app type=app_data_file
 user=_app seinfo=platform name=com.sonyericsson.android.camera3d domain=sonycamera_app type=app_data_file
+
+# TimeService app
+user=system seinfo=platform name=com.qualcomm.timeservice domain=qtimeservice type=system_app_data_file
