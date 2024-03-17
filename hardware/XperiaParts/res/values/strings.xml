@@ -38,7 +38,7 @@
     <string name="sim_slot">Sim Slot</string>
     <string name="sim_slot_summary">Select the sim slot you want network switcher to work for.\nSelected Slot: </string>
     <string name="ims_title">IMS Features</string>
-    <string name="ims_summary">Enables IMS features, such as VoLTE and VoWiFi, <b>if possible</b>.</string>
+    <string name="ims_summary">Enables IMS features, such as VoLTE, VoWiFi and ViLTE, <b>if possible</b>.</string>
     <string name="modem_title">Re-apply Modem</string>
     <string name="modem_summary">With enabled IMS, the modem crashes for some carriers if the mbn is not applied at every boot. Use this option to potentially fix such issues.</string>
     <string name="cancel_button_label">Cancel</string>
