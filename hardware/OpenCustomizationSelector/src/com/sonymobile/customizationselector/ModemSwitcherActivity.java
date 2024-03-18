@@ -33,7 +33,7 @@ public class ModemSwitcherActivity extends Activity {
         CSLog.d(TAG, "selected modem is " + modemFileName);
 
         if (mModemSwitcher.setModemConfiguration(ModemSwitcher.MODEM_FS_PATH + modemFileName))
-            ((PowerManager) getSystemService("power")).reboot(getApplicationContext().getString(R.string.reboot_reason_modem_debug));
+            getSystemService(PowerManager.class).reboot(getApplicationContext().getString(R.string.reboot_reason_modem_debug));
     }
 
     private void saveInitialModem(String initialModem) {
