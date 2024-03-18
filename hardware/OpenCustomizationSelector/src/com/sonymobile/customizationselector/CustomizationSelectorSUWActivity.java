@@ -85,7 +85,7 @@ public class CustomizationSelectorSUWActivity extends Activity {
                 case MSG_REBOOT:
                     CSLog.d(CustomizationSelectorSUWActivity.TAG, "Configuration changed - rebooting device...");
                     Log.i(customizationSelectorSUWActivity.getString(R.string.app_name), customizationSelectorSUWActivity.getString(R.string.customization_restart_desc_txt));
-                    ((PowerManager) customizationSelectorSUWActivity.getSystemService("power")).reboot(customizationSelectorSUWActivity.getApplicationContext().getString(R.string.reboot_reason));
+                    customizationSelectorSUWActivity.getSystemService(PowerManager.class).reboot(customizationSelectorSUWActivity.getApplicationContext().getString(R.string.reboot_reason));
                     return;
                 default:
                     return;
