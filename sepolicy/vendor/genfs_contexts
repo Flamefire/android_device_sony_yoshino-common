@@ -34,6 +34,8 @@ genfscon sysfs /devices/soc/soc:ldo_vibrator/leds/vibrator/activate     u:object
 genfscon sysfs /devices/soc/soc:ldo_vibrator/leds/vibrator/state        u:object_r:sysfs_leds:s0
 genfscon sysfs /devices/soc/soc:ldo_vibrator/leds/vibrator/duration     u:object_r:sysfs_leds:s0
 
+genfscon sysfs /devices/soc/18800000.qcom,icnss/net                     u:object_r:sysfs_net:s0
+
 genfscon sysfs /devices/soc/800f000.qcom,spmi/spmi-0/spmi0-02/800f000.qcom,spmi:qcom,pmi8998@2:qpnp,fg                                         u:object_r:sysfs_battery_supply:s0
 genfscon sysfs /devices/soc/800f000.qcom,spmi/spmi-0/spmi0-02/800f000.qcom,spmi:qcom,pmi8998@2:qcom,qpnp-smb2/power_supply                     u:object_r:sysfs_battery_supply:s0
 
