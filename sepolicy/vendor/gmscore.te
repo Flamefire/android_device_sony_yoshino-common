@@ -1,2 +1,4 @@
 # Known issue: b/303319090
 dontaudit gmscore_app kernel:security read_policy;
+
+get_prop(gmscore_app, vendor_pif_prop)
