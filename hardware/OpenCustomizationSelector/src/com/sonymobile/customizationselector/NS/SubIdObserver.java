@@ -2,9 +2,7 @@ package com.sonymobile.customizationselector.NS;
 
 import android.content.Context;
 import android.os.Handler;
-import android.provider.Settings;
 import android.telephony.SubscriptionManager;
-import com.sonymobile.customizationselector.CSLog;
 import com.sonymobile.customizationselector.CommonUtil;
 
 public class SubIdObserver {
@@ -27,7 +25,7 @@ public class SubIdObserver {
                 int subId = CommonUtil.getSubID(mContext);
                 if (subId != SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
                     mListener.onConnected(subId);
-                    unregister();
+                    mListener = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -38,26 +36,10 @@ public class SubIdObserver {
         }
     };
 
-    public void register(Listener listener) {
-        if (mListener != null)
-            return;
-        mListener = listener;
-        if (mHandler == null)
-            mHandler = new Handler(mContext.getMainLooper());
-        mHandler.post(runnable);
-
-        CSLog.d(TAG, "Registered");
-    }
-
-    private void unregister() {
-        if (mListener == null)
-            return;
-        mHandler.removeCallbacks(runnable);
-        mListener = null;
-        CSLog.d(TAG, "Unregistered");
-    }
-
-    public SubIdObserver(Context context) {
+    public SubIdObserver(Context context, Listener listener) {
         mContext = context;
-    }
+        mHandler = new Handler(mContext.getMainLooper());
+        mListener = listener;
+        mHandler.post(runnable);
+   }
 }

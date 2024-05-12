@@ -15,19 +15,18 @@ public class SlotObserver {
     }
 
     private final Context mContext;
-    private Handler mHandler;
+    private final Handler mHandler;
+    private final int mSubID;
     private Listener mListener;
-    private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
 
-    private final Runnable runnable = new Runnable() {
+    private final Runnable mRunnable = new Runnable() {
         @Override
-        public synchronized void run() {
+        public void run() {
             try {
-                if (mSubID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
-                    unregister();
-                else if (CommonUtil.isSIMLoaded(mContext, mSubID)) {
+                if (CommonUtil.isSIMLoaded(mContext, mSubID)){
+                    CSLog.d(TAG, "Connected");
                     mListener.onConnected();
-                    unregister();
+                    mListener = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -38,28 +37,22 @@ public class SlotObserver {
         }
     };
 
-    public void register(int subID, Listener listener) {
-        if (mListener != null)
-            return;
+    public void unregister() {
+        if (mListener != null) {
+            mListener = null;
+            mHandler.removeCallbacks(mRunnable);
+        }
+    }
+
+    public SlotObserver(Context context, Handler handler, int subID, Listener listener) {
+        if (subID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
+            throw new IllegalArgumentException();
+
+        mContext = context;
+        mHandler = handler;
         mSubID = subID;
         mListener = listener;
 
-        if (mHandler == null)
-            mHandler = new Handler(mContext.getMainLooper());
-        mHandler.post(runnable);
-        CSLog.d(TAG, "Registered");
-    }
-
-    public void unregister() {
-        if (mListener == null)
-            return;
-        mHandler.removeCallbacks(runnable);
-        mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
-        mListener = null;
-        CSLog.d(TAG, "Unregistered");
-    }
-
-    public SlotObserver(Context context) {
-        this.mContext = context;
+        mHandler.post(mRunnable);
     }
 }
