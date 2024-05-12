@@ -127,9 +127,9 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
             nsLowerNetwork.setOnPreferenceClickListener(preference -> {
                 final ContentResolver resolver = preference.getContext().getContentResolver();
                 int network = getLowerNetwork(resolver);
-                if(network == TelephonyManager.NETWORK_MODE_WCDMA_PREF)
+                if (network == TelephonyManager.NETWORK_MODE_WCDMA_PREF)
                     network = TelephonyManager.NETWORK_MODE_GSM_ONLY;
-                else if(network == TelephonyManager.NETWORK_MODE_GSM_ONLY)
+                else if (network == TelephonyManager.NETWORK_MODE_GSM_ONLY)
                     network = TelephonyManager.NETWORK_MODE_GSM_UMTS;
                 else
                     network = TelephonyManager.NETWORK_MODE_WCDMA_PREF;
@@ -230,7 +230,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
     }
 
     private static String getNetworkName(int network) {
-        switch(network) {
+        switch (network) {
             case TelephonyManager.NETWORK_MODE_GSM_ONLY:
                 return "2G";
             case TelephonyManager.NETWORK_MODE_WCDMA_PREF:
@@ -272,7 +272,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
         return true;
     }
 
-    private void sendBroadcast(Context context, String pref) throws IllegalArgumentException{
+    private void sendBroadcast(Context context, String pref) throws IllegalArgumentException {
         Intent broadcast = new Intent()
             .putExtra(pref, Settings.System.getInt(context.getContentResolver(), pref, 1))
             .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
