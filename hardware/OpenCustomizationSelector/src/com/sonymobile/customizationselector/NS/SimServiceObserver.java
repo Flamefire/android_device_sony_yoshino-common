@@ -1,8 +1,6 @@
 package com.sonymobile.customizationselector.NS;
 
-import android.content.Context;
 import android.os.Handler;
-import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import com.sonymobile.customizationselector.CSLog;
 import com.sonymobile.customizationselector.CommonUtil;
@@ -15,24 +13,18 @@ public class SimServiceObserver {
         void onConnected();
     }
 
-    private final Context mContext;
-    private int mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
-    private Handler mHandler;
+    private final Handler mHandler;
+    private final TelephonyManager mTm;
     private Listener mListener;
 
     private final Runnable runnable = new Runnable() {
         @Override
-        public synchronized void run() {
+        public void run() {
+            if (mListener == null)
+                return;
             try {
-                if (mSubID == SubscriptionManager.INVALID_SUBSCRIPTION_ID)
-                    unregister();
-                else {
-                    TelephonyManager tm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
-                    if (CommonUtil.hasSignal(tm)) {
-                        mListener.onConnected();
-                        unregister();
-                    }
-                }
+                if (CommonUtil.hasSignal(mTm))
+                    mListener.onConnected();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -42,17 +34,15 @@ public class SimServiceObserver {
         }
     };
 
-    public SimServiceObserver(Context context) {
-        mContext = context;
+    public SimServiceObserver(Handler handler, TelephonyManager tm) {
+        mHandler = handler;
+        mTm = tm;
     }
 
-    public void register(int subID, Listener listener) {
+    public void register(Listener listener) {
         if (mListener != null)
             return;
-        mSubID = subID;
         mListener = listener;
-        if (mHandler == null)
-            mHandler = new Handler(mContext.getMainLooper());
         mHandler.post(runnable);
         CSLog.d(TAG, "Registered");
     }
@@ -61,7 +51,6 @@ public class SimServiceObserver {
         if (mListener == null)
             return;
         mHandler.removeCallbacks(runnable);
-        mSubID = SubscriptionManager.INVALID_SUBSCRIPTION_ID;
         mListener = null;
         CSLog.d(TAG, "Unregistered");
     }
