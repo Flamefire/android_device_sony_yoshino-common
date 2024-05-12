@@ -1,6 +1,6 @@
 package com.sonymobile.customizationselector.NS;
 
-import android.content.Context;
+import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
@@ -17,18 +17,18 @@ public class AirplaneModeObserver extends ContentObserver {
         void onChange();
     }
 
-    private final Context mContext;
+    private final ContentResolver mResolver;
     private Listener mListener = null;
 
-    public AirplaneModeObserver(Context context, Handler handler) {
+    public AirplaneModeObserver(Handler handler, ContentResolver resolver) {
         super(handler);
-        mContext = context;
+        mResolver = resolver;
     }
 
     public void register(Listener listener) {
         if (mListener != null)
             return;
-        mContext.getContentResolver().registerContentObserver(getUri(), false, this, UserHandle.USER_CURRENT);
+        mResolver.registerContentObserver(getUri(), false, this, UserHandle.USER_CURRENT);
         mListener = listener;
         CSLog.d(TAG, "Registered");
     }
@@ -36,7 +36,7 @@ public class AirplaneModeObserver extends ContentObserver {
     public void unregister() {
         if (mListener == null)
             return;
-        mContext.getContentResolver().unregisterContentObserver(this);
+        mResolver.unregisterContentObserver(this);
         mListener = null;
         CSLog.d(TAG, "Unregistered");
     }
