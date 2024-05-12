@@ -12,11 +12,11 @@ public class MiscTA {
         return new String(read(unit), StandardCharsets.UTF_8);
     }
 
-    public static void write(int unit, byte[] data) throws MiscTaException{
+    public static void write(int unit, byte[] data) throws MiscTaException {
         com.sonymobile.miscta.MiscTA.write(unit, data);
     }
 
-    public static void write(int unit, String data) throws MiscTaException{
+    public static void write(int unit, String data) throws MiscTaException {
         write(unit, data.getBytes(StandardCharsets.UTF_8));
     }
 }

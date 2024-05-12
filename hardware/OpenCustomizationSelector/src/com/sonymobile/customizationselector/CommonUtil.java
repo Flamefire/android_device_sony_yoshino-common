@@ -80,14 +80,14 @@ public class CommonUtil {
         return getDefaultSubId(context) == subID;
     }
 
-    public static int getSimSlotIndex(Context context, int defaultIdx){
+    public static int getSimSlotIndex(Context context, int defaultIdx) {
         if (CommonUtil.isDualSim(context))
             return Settings.System.getInt(context.getContentResolver(), "ns_slot", defaultIdx);
         else
             return 0;
     }
 
-    public static int getSimSlotIndex(Context context){
+    public static int getSimSlotIndex(Context context) {
         return getSimSlotIndex(context, 0);
     }
 
