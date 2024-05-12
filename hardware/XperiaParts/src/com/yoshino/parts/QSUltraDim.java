@@ -26,7 +26,7 @@ public class QSUltraDim extends TileService {
         Settings.System.putInt(context.getContentResolver(), Constants.ULTRA_DIM, enabled ? 1 : 0);
         SystemProperties.set(Constants.ULTRA_DIM_CURRENT_PROP, String.valueOf(value));
     }
-    
+
     private boolean isEnabled() {
         return isEnabled(this);
     }
@@ -36,7 +36,7 @@ public class QSUltraDim extends TileService {
     }
 
     private static void readConfigProperties() {
-        if(defaultValue == 0) {
+        if (defaultValue == 0) {
             defaultValue = SystemProperties.getInt(Constants.ULTRA_DIM_DEFAULT_PROP, -1);
             lowValue = SystemProperties.getInt(Constants.ULTRA_DIM_LOW_PROP, 5000);
         }
@@ -51,7 +51,7 @@ public class QSUltraDim extends TileService {
 
     private void updateTile(boolean enabled) {
         Tile tile = getQsTile();
-        if(!mIsSupported) {
+        if (!mIsSupported) {
             tile.setState(Tile.STATE_UNAVAILABLE);
             tile.setSubtitle(getString(R.string.ultra_dim_label_unsupported));
         } else {
@@ -63,7 +63,7 @@ public class QSUltraDim extends TileService {
 
     @Override
     public void onClick() {
-        if(!mIsSupported)
+        if (!mIsSupported)
             return;
         final boolean enabled = !isEnabled();
         Log.i(TAG, "Setting to " + enabled);
