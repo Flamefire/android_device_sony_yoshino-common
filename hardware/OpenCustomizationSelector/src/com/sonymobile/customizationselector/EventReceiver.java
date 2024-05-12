@@ -110,7 +110,7 @@ public class EventReceiver extends BroadcastReceiver {
     private String[] readModemFile() {
         String[] stat = {"N/A", "N/A"};
         ModemSwitcher.ModemStatusContent data = ModemSwitcher.readModemStatusFile();
-        if(data != null)
+        if (data != null)
             stat = new String[]{data.success, data.currentModem};
         return stat;
     }

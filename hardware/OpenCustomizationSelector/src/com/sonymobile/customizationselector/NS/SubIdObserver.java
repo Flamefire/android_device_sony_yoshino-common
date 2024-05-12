@@ -21,7 +21,7 @@ public class SubIdObserver {
     private final Runnable runnable = new Runnable() {
         @Override
         public synchronized void run() {
-            if(mListener == null)
+            if (mListener == null)
                 return;
             try {
                 int subId = CommonUtil.getSubID(mContext);
@@ -42,7 +42,7 @@ public class SubIdObserver {
         if (mListener != null)
             return;
         mListener = listener;
-        if(mHandler == null)
+        if (mHandler == null)
             mHandler = new Handler(mContext.getMainLooper());
         mHandler.post(runnable);
 
@@ -50,7 +50,7 @@ public class SubIdObserver {
     }
 
     private void unregister() {
-        if(mListener == null)
+        if (mListener == null)
             return;
         mHandler.removeCallbacks(runnable);
         mListener = null;

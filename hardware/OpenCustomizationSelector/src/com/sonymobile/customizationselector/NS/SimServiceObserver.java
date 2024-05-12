@@ -36,7 +36,7 @@ public class SimServiceObserver {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                if(mListener != null)
+                if (mListener != null)
                     mHandler.postDelayed(this, 2000);
             }
         }
@@ -51,7 +51,7 @@ public class SimServiceObserver {
             return;
         mSubID = subID;
         mListener = listener;
-        if(mHandler == null)
+        if (mHandler == null)
             mHandler = new Handler(mContext.getMainLooper());
         mHandler.post(runnable);
         CSLog.d(TAG, "Registered");
