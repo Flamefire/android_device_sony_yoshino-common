@@ -88,9 +88,9 @@ public class CSLog {
             if (!logFile.exists()) {
                 if (!logFile.createNewFile())
                     return;
-            } else if(!sizeCheckDone) {
+            } else if (!sizeCheckDone) {
                 // Delete file if it grows larger than 1 MB
-                if(logFile.length() > 1024 * 1024)
+                if (logFile.length() > 1024 * 1024)
                     logFile.delete();
                 sizeCheckDone = true;
             }
