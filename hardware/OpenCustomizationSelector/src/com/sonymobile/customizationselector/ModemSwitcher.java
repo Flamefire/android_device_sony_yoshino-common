@@ -242,55 +242,57 @@ public class ModemSwitcher {
 
     public static void reApplyModem(Context ctx) {
         if (Settings.System.getInt(ctx.getContentResolver(), CS_REAPPLY_MODEM, 1) == 0) {
-            CSLog.d(TAG, "reApplyModem: Preference false. Returning ...");
+            CSLog.d(TAG, "reApplyModem: Preference false. Returning...");
             return;
         }
+        String modem;
         try {
-            String modem = getCurrentModemConfig();
-            if (modem.isEmpty()) {
-                CSLog.e(TAG, "reApplyModem - Modem is EMPTY !");
-                return;
-            }
-            CSLog.d(TAG, "reApplyModem - current modem: " + modem);
-            CSLog.d(TAG, "reApplyModem - Re-writing 2405 with modem " + modem.replace(MODEM_FS_PATH, ""));
+            modem = getCurrentModemConfig();
+        } catch (IOException e) {
+            CSLog.e(TAG, "reApplyModem - There was exception getting current modem: ", e);
+            return;
+        }
+        if (modem.isEmpty())
+            CSLog.e(TAG, "reApplyModem - Modem is EMPTY!");
+        else {
+            CSLog.d(TAG, "reApplyModem - Current modem: " + modem);
 
-            // Store preference without checks - ModemConfiguration:75
+            // Store preference without checks
             Configurator.getPreferences(ctx).edit().putString(ModemConfiguration.SAVED_MODEM_CONFIG, modem).apply();
 
-            // Way of writing to Misc TA - ModemSwitcher:226
             if (writeModemToMiscTA(new File(modem).getName())) {
-                CSLog.i(TAG, "reApplyModem - 2405 was re-written successfully");
+                CSLog.i(TAG, "reApplyModem - Modem was re-written successfully");
 
                 try {
                     MiscTA.write(TA_FOTA_INTERNAL, "temporary_modem");
-                    CSLog.i(TAG, "reApplyModem - Modem Switcher 2404 cleared");
+                    CSLog.i(TAG, "reApplyModem - Internal TA cleared");
                 } catch (MiscTaException e) {
-                    CSLog.e(TAG, "reApplyModem - There was an error clearing 2404: ", e);
+                    CSLog.e(TAG, "reApplyModem - There was an error clearing internal TA: ", e);
                 }
             } else
-                CSLog.e(TAG, "reApplyModem - 2405 was NOT re-written");
-        } catch (IOException e) {
-            CSLog.e(TAG, "reApplyModem - There was exception getting current modem: ", e);
+                CSLog.e(TAG, "reApplyModem - Modem was NOT re-written");
         }
     }
 
     public static void revertReApplyModem() {
+        String modem;
         try {
-            String modem = getCurrentModemConfig();
-            if (modem.isEmpty()) {
-                CSLog.e(TAG, "revertReApplyModem - Modem is EMPTY !");
-                return;
-            }
-            CSLog.d(TAG, "revertReApplyModem - current modem: " + modem);
+            modem = getCurrentModemConfig();
+        } catch (IOException e) {
+            CSLog.e(TAG, "revertReApplyModem - There was exception getting current modem: ", e);
+            return;
+        }
+        if (modem.isEmpty())
+            CSLog.e(TAG, "revertReApplyModem - Modem is EMPTY!");
+        else {
+            CSLog.d(TAG, "revertReApplyModem - Current modem: " + modem);
 
             try {
                 MiscTA.write(TA_FOTA_INTERNAL, new File(modem).getName());
-                CSLog.i(TAG, "revertReApplyModem - Modem Switcher 2404 was written with: " + modem.replace(MODEM_FS_PATH, ""));
+                CSLog.i(TAG, "revertReApplyModem - Internal TA was written");
             } catch (MiscTaException e) {
-                CSLog.e(TAG, "revertReApplyModem - There was an error writing 2404: ", e);
+                CSLog.e(TAG, "revertReApplyModem - There was an error writing internal TA: ", e);
             }
-        } catch (IOException e) {
-            CSLog.e(TAG, "revertReApplyModem - There was exception getting current modem: ", e);
         }
     }
 }
