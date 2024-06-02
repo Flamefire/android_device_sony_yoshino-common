@@ -1,21 +1,19 @@
 package com.sonymobile.customizationselector.NS;
 
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 import com.sonymobile.customizationselector.CSLog;
-import com.sonymobile.customizationselector.CommonUtil;
 
-public class SimServiceObserver {
+public class PullObserver {
 
-    private static final String TAG = "SimServiceObserver";
-
-    interface Listener {
-        void onConnected();
+    interface Predicate {
+        boolean test();
     }
 
+    private final String TAG;
+
     private final Handler mHandler;
-    private final TelephonyManager mTm;
-    private Listener mListener;
+    private final Predicate mPredicate;
+    private Runnable mListener;
 
     private final Runnable runnable = new Runnable() {
         @Override
@@ -23,8 +21,8 @@ public class SimServiceObserver {
             if (mListener == null)
                 return;
             try {
-                if (CommonUtil.hasSignal(mTm))
-                    mListener.onConnected();
+                if (mPredicate.test())
+                    mListener.run();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -34,12 +32,13 @@ public class SimServiceObserver {
         }
     };
 
-    public SimServiceObserver(Handler handler, TelephonyManager tm) {
+    public PullObserver(String tag, Handler handler, Predicate predicate) {
+        TAG = tag;
         mHandler = handler;
-        mTm = tm;
+        mPredicate = predicate;
     }
 
-    public void register(Listener listener) {
+    public void register(Runnable listener) {
         if (mListener != null)
             return;
         mListener = listener;
