@@ -30,7 +30,7 @@ public class SwitchState {
     private final Handler mHandler;
     private final TelephonyManager mTm;
     private final AirplaneModeObserver mAirplaneModeObserver;
-    private final SimServiceObserver mSimServiceObserver;
+    private final PullObserver mSimServiceObserver;
     private SlotObserver mSlotObserver;
 
     public SwitchState(int subID, Context appContext, Handler handler) throws IllegalArgumentException {
@@ -42,7 +42,7 @@ public class SwitchState {
         mHandler = handler;
         mTm = mContext.getSystemService(TelephonyManager.class).createForSubscriptionId(mSubID);
         mAirplaneModeObserver = new AirplaneModeObserver(mHandler, mContent);
-        mSimServiceObserver = new SimServiceObserver(mHandler, mTm);
+        mSimServiceObserver = new PullObserver("SimServiceObserver", mHandler, () -> { return CommonUtil.hasSignal(mTm); });
     }
 
     /** Stop all observers and any pending messages */
@@ -70,7 +70,7 @@ public class SwitchState {
         if (!isAirplaneModeOn() && hasSignal())
             callback.run();
         else {
-            SimServiceObserver.Listener signalListener = () -> {
+            Runnable signalListener = () -> {
                 mAirplaneModeObserver.unregister();
                 mSimServiceObserver.unregister();
                 callback.run();
