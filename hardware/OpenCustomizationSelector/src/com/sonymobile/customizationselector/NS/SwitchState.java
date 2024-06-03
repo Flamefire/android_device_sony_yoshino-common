@@ -195,6 +195,13 @@ public class SwitchState {
     }
 
     /**
+     * Returns whether the current/preferred network is LTE or not
+     */
+    public boolean isLTE() {
+        return isLTE(getPreferredNetwork());
+    }
+
+    /**
      * Get the string version of the variables.
      * <p>
      * Too lazy to refer the {@link RILConstants}
