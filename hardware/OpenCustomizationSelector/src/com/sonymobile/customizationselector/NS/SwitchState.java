@@ -197,6 +197,13 @@ public class SwitchState {
         return (network & TelephonyManager.NETWORK_CLASS_BITMASK_4G) != 0;
     }
 
+    /**
+     * Returns whether the current/preferred network is LTE or not
+     */
+    public boolean isLTE() {
+        return isLTE(getPreferredNetwork());
+    }
+
     private void d(String msg) {
         CSLog.d(TAG, msg);
     }
