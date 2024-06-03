@@ -14,7 +14,7 @@ import com.sonymobile.customizationselector.CommonUtil;
 /**
  * Service to handle Network mode
  * - On boot if preference network is set to LTE switch to the selected lower network (e.g. 3G)
- * - When the device is unlocked and the SIM has got service connection
+ * - When the device is unlocked and the SIM has got data connection
  *   switch back to the previous network and exit
  *
  * @author shank03
@@ -133,6 +133,42 @@ public class NetworkSwitcher extends Service {
     }
 
     private void onLowerSignal() {
+        if(mState.getDataState() == SwitchState.DataState.DISABLED) {
+            i("Data disabled");
+            // Wait a bit then just switch back
+            mState.postDelayed(()-> resetNetworkAndFinish(), 2000);
+        } else {
+            Runnable runnable = new Runnable() {
+                private int attempt = 0;
+                private final long delay = 500;
+
+                @Override
+                public void run() {
+                    switch(mState.getDataState()) {
+                        case CONNECTED:
+                            i("Data connected");
+                            break;
+                        case DISCONNECTED:
+                            attempt++;
+                            // Keep trying for 1min
+                            if(attempt < 60 * 1000 / delay) {
+                                mState.postDelayed(this, delay);
+                                return; // Don't reset yet
+                            } else
+                                e("Still no data connection, aborting");
+                            break;
+                        case DISABLED:
+                            i("Data disabled");
+                            break;
+                    }
+                    resetNetworkAndFinish();
+                }
+            };
+            mState.postDelayed(runnable, 1000);
+        }
+    }
+
+    private void resetNetworkAndFinish() {
         if (mState.changeToOriginalNetwork())
             d("Changed back to original network");
         else
