@@ -99,7 +99,7 @@ public class NetworkSwitcher extends Service {
 
     /** Switch to the lower network and continue once the user unlocked the phone */
     private void switchDown() {
-        if (SwitchState.isLTE(mState.getPreferredNetwork())) {
+        if (mState.isLTE()) {
             if (!mState.changeNetworkDown()) {
                 e("Error: Failed changing to lower network");
                 stopProcess();
