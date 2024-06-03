@@ -169,6 +169,27 @@ public class SwitchState {
         return CommonUtil.hasSignal(mTm);
     }
 
+    public enum DataState {
+        DISCONNECTED,
+        CONNECTED,
+        DISABLED,
+    }
+
+    /**
+     * Return true if there is a (network) signal for the SIM
+     */
+    public DataState getDataState() {
+        if(!mTm.isDataCapable())
+            return DataState.DISABLED;
+        switch (mTm.getDataState()) {
+            case TelephonyManager.DATA_CONNECTED:
+            case TelephonyManager.DATA_SUSPENDED:
+                return DataState.CONNECTED;
+            default:
+                return DataState.DISCONNECTED;
+        }
+    }
+
     /**
      * Returns whether @param network is LTE or not
      */
