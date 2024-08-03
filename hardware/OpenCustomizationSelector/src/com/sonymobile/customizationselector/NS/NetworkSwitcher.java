@@ -77,6 +77,7 @@ public class NetworkSwitcher extends Service {
     private void stopProcess() {
         mState.stop();
         mState = null;
+        CSLog.i(TAG, "Processing done");
         stopSelf();
     }
 
