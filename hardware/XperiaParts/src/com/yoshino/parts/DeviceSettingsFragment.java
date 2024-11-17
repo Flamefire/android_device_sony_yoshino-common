@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020, Shashank Verma (shank03) <shashank.verma2002@gmail.com>
+ * Copyright (c) 2024 Alexander Grund (Flamefire)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,32 +45,28 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
     public void onCreatePreferences(Bundle bundle, String key) {
         addPreferencesFromResource(R.xml.device_settings);
 
-        SwitchPreference glovePref = findPreference(GLOVE_MODE);
+        final SwitchPreference glovePref = findPreference(GLOVE_MODE);
         assert glovePref != null;
         glovePref.setChecked(Settings.System.getInt(glovePref.getContext().getContentResolver(), GLOVE_MODE, 0) == 1);
         glovePref.setOnPreferenceChangeListener(this);
 
-        SwitchPreference smartStaminPref = findPreference(SMART_STAMINA_MODE);
+        final SwitchPreference smartStaminPref = findPreference(SMART_STAMINA_MODE);
         assert smartStaminPref != null;
         smartStaminPref.setChecked(Settings.System.getInt(smartStaminPref.getContext().getContentResolver(), SMART_STAMINA_MODE, 0) == 1);
         smartStaminPref.setOnPreferenceChangeListener(this);
 
-        SwitchPreference notificationPref = findPreference(CS_NOTIFICATION);
+        final SwitchPreference notificationPref = findPreference(CS_NOTIFICATION);
         assert notificationPref != null;
         notificationPref.setChecked(Settings.System.getInt(notificationPref.getContext().getContentResolver(),
                 CS_NOTIFICATION, 1) == 1);
         notificationPref.setOnPreferenceChangeListener(this);
 
-        Preference statusPref = findPreference(CS_STATUS);
-        assert statusPref != null;
-        statusPref.setOnPreferenceClickListener(preference -> {
+        findPreference(CS_STATUS).setOnPreferenceClickListener(preference -> {
             preference.getContext().startActivity(make_CS_ActivityIntent("StatusActivity"));
             return true;
         });
 
-        Preference logPref = findPreference(CS_LOG);
-        assert logPref != null;
-        logPref.setOnPreferenceClickListener(preference -> {
+        findPreference(CS_LOG).setOnPreferenceClickListener(preference -> {
             preference.getContext().startActivity(make_CS_ActivityIntent("LogActivity"));
             return true;
         });
@@ -81,9 +78,9 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
             return true;
         });
 
-        Preference slotPref = findPreference(NS_SLOT);
-        SwitchPreference nsService = findPreference(NS_SERVICE);
-        Preference nsLowerNetwork = findPreference(NS_LOWER_NETWORK);
+        final Preference slotPref = findPreference(NS_SLOT);
+        final SwitchPreference nsService = findPreference(NS_SERVICE);
+        final Preference nsLowerNetwork = findPreference(NS_LOWER_NETWORK);
         if (slotPref != null && nsService != null) {
             if (getContext().getSystemService(TelephonyManager.class).getPhoneCount() > 1) {
                 slotPref.setVisible(true);
@@ -138,7 +135,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
             });
         }
 
-        SwitchPreference imsPref = findPreference(CS_IMS);
+        final SwitchPreference imsPref = findPreference(CS_IMS);
         assert imsPref != null;
         if (Settings.System.getInt(imsPref.getContext().getContentResolver(), CS_IMS, 1) == 0) {
             imsPref.setChecked(false);
@@ -150,7 +147,7 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
             msActPref.setEnabled(true);
         }
         imsPref.setOnPreferenceClickListener(preference -> {
-            int ims = Settings.System.getInt(imsPref.getContext().getContentResolver(), CS_IMS, 1);
+            final int ims = Settings.System.getInt(imsPref.getContext().getContentResolver(), CS_IMS, 1);
             if (ims == 1) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(imsPref.getContext());
                 builder.setCancelable(false);
@@ -197,13 +194,13 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
             return true;
         });
 
-        SwitchPreference modemPref = findPreference(CS_RE_APPLY_MODEM);
+        final SwitchPreference modemPref = findPreference(CS_RE_APPLY_MODEM);
         assert modemPref != null;
         modemPref.setChecked(Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 1) == 1);
         modemPref.setOnPreferenceClickListener(preference -> {
-            int applyModem = Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 1);
+            final int applyModem = Settings.System.getInt(modemPref.getContext().getContentResolver(), CS_RE_APPLY_MODEM, 1);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(modemPref.getContext());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(modemPref.getContext());
             builder.setCancelable(false);
             builder.setTitle("Reboot required");
             builder.setMessage("A reboot is required to " + (applyModem == 0 ? "enable" : "disable") + " this feature. Are you sure you want to reboot ?");
