@@ -1,0 +1,53 @@
+<!--
+    ~ Copyright (c) 2024, Alexander Grund (Flamefire)
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  -->
+<resources>
+    <string name="device_settings_title">Xperia Parts</string>
+    <string name="device_settings_summary">Zusätzliche Einstellungen</string>
+
+    <string name="app_name">XperiaParts</string>
+
+    <string name="gesture">Bedienung</string>
+    <string name="glove_mode">Handschuhmodus</string>
+    <string name="glove_mode_summary">Ermöglicht, auf Berührungen des Bildschirms mit Handschuhen zu reagieren</string>
+    <string name="smart_stamina_mode">Smart-Stamina-Modus</string>
+    <string name="smart_stamina_summary">Erhöht den Zeitraum, in dem der Clearpad-Treiber nach neuen Eingaben sucht</string>
+    <string name="network_switcher">Netzwerk-Switcher</string>
+    <string name="status">Status</string>
+    <string name="sony_modem_notification">Sony Modem Benachrichtigung</string>
+    <string name="sony_modem_notification_summary">Benachrichtigung beim Booten anzeigen</string>
+    <string name="logs">Logs</string>
+    <string name="customization_selector">Customization Selector</string>
+    <string name="modem_switcher_activity">Modem-Switcher Einstellungen</string>
+    <string name="modem_switcher_activity_summary">Wählen Sie Ihr providerspezifische Modem, wenn das falsche Modem verwendet wird</string>
+    <string name="network_switcher_service">Service</string>
+    <string name="ns_summary">Wenn Ihre SIM-Karte nicht funktioniert, bis Sie zu einem schwächeren Netzwerkmodus (wie 3G) wechseln, aktivieren Sie diesen Dienst, der dies automatisch für Sie erledigt.\nEr startet Ihr Gerät mit 3G und wechselt zu LTE (je nach Voreinstellung, wenn LTE aktiviert wurde), nachdem die SIM-Karte betriebsbereit ist.</string>
+    <string name="lower_network">Schwächeres Netzwerk</string>
+    <string name="lower_network_summary">Wählen Sie das Netzwerk aus, zu dem der Dienst vorübergehend wechseln soll.\nAusgewählt:</string>
+    <string name="sim_slot">SIM-Steckplatz</string>
+    <string name="sim_slot_summary">Wählen Sie den SIM-Steckplatz aus, für den der Netzwerk-Switcher verwendet werden soll.\nAusgewählter Steckplatz:</string>
+    <string name="ims_title">IMS-Funktionen</string>
+    <string name="ims_summary">Aktiviert IMS-Funktionen wie VoLTE, VoWiFi und ViLTE,<b> wenn möglich</b> .</string>
+    <string name="modem_title">Reset Modem</string>
+    <string name="modem_summary">Bei aktiviertem IMS stürzt das Modem bei einigen Netzbetreibern ab, wenn die MBN nicht bei jedem Bootvorgang reaktiviert wird. Verwenden Sie diese Option, um solche Probleme möglicherweise zu beheben.</string>
+    <string name="cancel_button_label">Abbrechen</string>
+    <string name="ultra_dim_name">Ultra-Dim</string>
+    <string name="ultra_dim_label_unsupported">Auf diesem Gerät nicht unterstützt</string>
+    <string name="ultra_dim_label_enabled">Bildschirmhelligkeit wiederherstellen</string>
+    <string name="ultra_dim_label_disabled">Reduziere die Bildschirmhelligkeit</string>
+    <string name="PIFheader">Play Integrity</string>
+    <string name="update_pif_config_header">Konfiguration aktualisieren</string>
+    <string name="update_pif_config_title">PI-Konfiguration aktualisieren</string>
+    <string name="update_pif_config_msg">Eine neue Konfigurationsdatei für Play Integrity wird heruntergeladen und die Aktuelle ersetzt</string>
+    <string name="updating_pif">Aktualisiere...</string>
+</resources>
