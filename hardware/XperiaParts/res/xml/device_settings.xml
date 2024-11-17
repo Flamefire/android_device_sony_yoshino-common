@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020, Shashank Verma (shank03) <shashank.verma2002@gmail.com>
+  ~ Copyright (c) 2024, Alexander Grund (Flamefire)
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -103,6 +104,17 @@
             android:defaultValue="3"
             android:summary="@string/lower_network_summary"
             android:title="@string/lower_network" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pif"
+        android:title="@string/PIFheader">
+
+        <Preference
+            android:icon="@drawable/briefcase_download"
+            android:key="pif_update"
+            android:title="@string/update_pif_config_header" />
 
     </PreferenceCategory>
 
