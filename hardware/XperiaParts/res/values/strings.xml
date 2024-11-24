@@ -49,7 +49,13 @@
     <string name="ultra_dim_label_disabled">Reduce screen brightness</string>
     <string name="PIFheader">Play Integrity</string>
     <string name="update_pif_config_header">Update config</string>
-    <string name="update_pif_config_title">Update PI config</string>
-    <string name="update_pif_config_msg">A new config file for Play Integrity will be downloaded replacing the current one</string>
+    <string name="pif_config_updated">Updated PI config</string>
+    <string name="custom_pif_exists">Config for Play Integrity was downloaded but the custom one will still be used.\n
+                                     Delete the file \'%1$s\' to use the downloaded one.</string>
     <string name="updating_pif">Updating...</string>
+    <string name="pif_download_failed">Download failed.</string>
+    <string name="pif_config_upToDate">Config is already up-to-date.</string>
+    <string name="pif_config_failed_remove">Failed to remove old config at %1$s</string>
+    <string name="pif_config_failed_rename">Failed to write to config file at %1$s</string>
+    <string name="pif_config_update_error">An error occurred</string>
 </resources>

@@ -67,6 +67,10 @@
             <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE" android:value="true" />
         </service>
 
+        <provider
+            android:name=".PIFProvider"
+            android:authorities="com.yoshino.parts.pifprovider"
+            android:exported="true" />
     </application>
 
 </manifest>

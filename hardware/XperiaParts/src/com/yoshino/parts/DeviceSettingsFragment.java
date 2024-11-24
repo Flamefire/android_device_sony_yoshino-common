@@ -226,21 +226,20 @@ public class DeviceSettingsFragment extends PreferenceFragment implements Prefer
     }
 
     private void updatePif(Preference pref) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(pref.getContext());
-        builder.setCancelable(false);
-        builder.setTitle(R.string.update_pif_config_title);
-        builder.setMessage(R.string.update_pif_config_msg);
-        builder.setPositiveButton(android.R.string.yes, (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-            pref.setEnabled(false);
-            pref.setSummary(R.string.updating_pif);
-            new PIFUpdater(pref.getContext(), () -> {
-                pref.setEnabled(true);
-                pref.setSummary("");
-            }).execute();
-        });
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.create().show();
+        pref.setEnabled(false);
+        pref.setSummary(R.string.updating_pif);
+        new PIFUpdater(pref.getContext(), (String customFileIfNotEqual) -> {
+            pref.setEnabled(true);
+            pref.setSummary("");
+            if (customFileIfNotEqual != null) {
+                new AlertDialog.Builder(pref.getContext())
+                    .setTitle(R.string.pif_config_updated)
+                    .setMessage(getString(R.string.custom_pif_exists, customFileIfNotEqual))
+                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> { dialogInterface.dismiss(); })
+                    .create()
+                    .show();
+            }
+        }).execute();
     }
 
     private static int getLowerNetwork(ContentResolver resolver)

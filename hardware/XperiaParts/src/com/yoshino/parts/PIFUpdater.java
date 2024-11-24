@@ -29,17 +29,30 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class PIFUpdater extends AsyncTask<Void, Void, String> {
+public class PIFUpdater extends AsyncTask<Void, Void, PIFUpdater.OperationResult> {
+
+    public static class OperationResult {
+        public final boolean success;
+        public final String message;
+
+        private OperationResult(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+    }
 
     public interface Listener{
-        void OnCompleted();
+        /** Called when the update has been completed.
+         *  When the custom config file exists and is different the path will be passed, else null.  */
+        void OnCompleted(String customFileIfNotEqual);
     }
 
     private static final String TAG = "PIFUpdater";
 
     private static final String PIF_DOWNLOAD_URL =
             "https://raw.githubusercontent.com/Flamefire/lineageos_lilac/refs/heads/main/tools/pif.json";
-    private static final String CUSTOM_PIF_PATH = "/sdcard/pif.json";
+    /** Where the user provided PIF config is stored */
+    public static final File CUSTOM_PIF_PATH = new File("/sdcard/pif.json");
 
     private final Context mContext;
     private final Listener mListener;
@@ -49,35 +62,47 @@ public class PIFUpdater extends AsyncTask<Void, Void, String> {
         mListener = listener;
     }
 
+    public File getInternalPIFLocation() {
+        return new File(mContext.getFilesDir(), CUSTOM_PIF_PATH.getName());
+    }
+
+    private OperationResult success(int resID) {
+        return new OperationResult(true, mContext.getString(resID));
+    }
+    private OperationResult failure(int resID, Object... formatArgs) {
+        return new OperationResult(false, mContext.getString(resID, formatArgs));
+    }
+
+    /** Run the update, return an error message on failure, else null. */
     @Override
-    protected String doInBackground(Void... voids) {
+    protected OperationResult doInBackground(Void... voids) {
         File tempFile = null;
         try {
             final URL url = new URL(PIF_DOWNLOAD_URL);
             tempFile = File.createTempFile("tempDownload", ".json", mContext.getCacheDir());
 
-            if (!downloadFile(url, tempFile))
-                return "Download failed";
+            if (!downloadFile(url, tempFile) || tempFile.length() == 0)
+                return failure(R.string.pif_download_failed);
             Log.i(TAG, "Downloaded PIF from " + url);
 
-            final File customPifFile = new File(CUSTOM_PIF_PATH);
-            if (customPifFile.exists()) {
+            final File internalPifFile = getInternalPIFLocation();
+            if (internalPifFile.exists()) {
                 Log.i(TAG, "Checking existing config");
-                if (areFilesEqual(tempFile, customPifFile))
-                    return "Config is already up-to-date.";
+                if (areFilesEqual(tempFile, internalPifFile))
+                    return success(R.string.pif_config_upToDate);
                 Log.i(TAG, "Update required");
-                if (!customPifFile.delete())
-                    return "Failed to remove old config at " + customPifFile.getPath();
+                if (!internalPifFile.delete())
+                    return failure(R.string.pif_config_failed_remove, internalPifFile);
             }
 
-            if (tempFile.renameTo(customPifFile))
-                return "Config updated";
+            if (tempFile.renameTo(internalPifFile))
+                return success(R.string.pif_config_updated);
             else
-                return "Failed to write to config file at " + customPifFile.getPath();
+                return failure(R.string.pif_config_failed_rename, internalPifFile);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "An error occurred";
+            return failure(R.string.pif_config_update_error);
         } finally {
             if (tempFile != null && tempFile.exists())
                 tempFile.delete();
