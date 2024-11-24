@@ -46,8 +46,15 @@
     <string name="ultra_dim_label_enabled">Bildschirmhelligkeit wiederherstellen</string>
     <string name="ultra_dim_label_disabled">Reduziere die Bildschirmhelligkeit</string>
     <string name="PIFheader">Play Integrity</string>
-    <string name="update_pif_config_header">Konfiguration aktualisieren</string>
-    <string name="update_pif_config_title">PI-Konfiguration aktualisieren</string>
-    <string name="update_pif_config_msg">Eine neue Konfigurationsdatei für Play Integrity wird heruntergeladen und die Aktuelle ersetzt</string>
+    <string name="update_pif_config_header">Config aktualisieren</string>
+    <string name="pif_config_updated">PI-Config aktualisiert</string>
+    <string name="custom_pif_exists">Eine Config für Play Integrity wurde heruntergeladen,
+                                    aber die benutzerdefinierte wird weiterhin verwendet.\n
+                                    Lösche die Datei \'%1$s\', um die heruntergeladene zu verwenden.</string>
     <string name="updating_pif">Aktualisiere...</string>
+    <string name="pif_download_failed">Download fehlgeschlagen.</string>
+    <string name="pif_config_upToDate">Config ist bereits aktuell.</string>
+    <string name="pif_config_failed_remove">Konnte alte Config %1$s nicht entfernen</string>
+    <string name="pif_config_failed_rename">Konnte Config nicht nach %1$s schreiben</string>
+    <string name="pif_config_update_error">Fehler aufgetreten</string>
 </resources>
