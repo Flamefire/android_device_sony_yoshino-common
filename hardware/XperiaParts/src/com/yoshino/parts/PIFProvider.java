@@ -10,7 +10,11 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class PIFProvider extends ContentProvider {
@@ -46,6 +50,27 @@ public class PIFProvider extends ContentProvider {
         throw new UnsupportedOperationException("Update not supported");
     }
 
+    private ParcelFileDescriptor createFilePipe(File file) throws FileNotFoundException {
+        try {
+            ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createPipe();
+            new Thread(() -> {
+                try (OutputStream output = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1]);
+                     InputStream input = new FileInputStream(file)) {
+
+                    final byte[] buffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = input.read(buffer)) != -1)
+                        output.write(buffer, 0, bytesRead);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            return pipe[0];
+        } catch (IOException e) {
+            throw new FileNotFoundException("Could not open pipe for: " + file.toString());
+        }
+    }
+
     @Override
     public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
         Context context = getContext();
@@ -63,6 +88,6 @@ public class PIFProvider extends ContentProvider {
                 throw new FileNotFoundException("File not found");
         }
 
-        return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+        return createFilePipe(file);
     }
 }
