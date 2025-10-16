@@ -50,3 +50,9 @@ allow hal_camera_somc lensctrl_device:chr_file rw_file_perms;
 
 # Don't log attempts to look for idd
 dontaudit hal_camera_somc default_android_hwservice:hwservice_manager find;
+
+# Allow Sony camera HAL to read system default properties
+get_prop(hal_camera_somc, default_prop)
+
+# Allow reads of exported default props
+get_prop(hal_camera_somc, exported_default_prop)

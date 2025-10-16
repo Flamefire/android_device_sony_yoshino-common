@@ -38,6 +38,7 @@ allow sonycamera_app surfaceflinger_service:service_manager find;
 allow sonycamera_app tethering_service:service_manager find;
 allow sonycamera_app thermal_service:service_manager find;
 allow sonycamera_app trust_service:service_manager find;
+allow sonycamera_app uri_grants_service:service_manager find;
 allow sonycamera_app wifi_service:service_manager find;
 
 allow sonycamera_app idd_service:service_manager find;
